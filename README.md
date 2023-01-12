@@ -11,7 +11,7 @@ DSL for Data Mining
 
 ## Backus-Naur Form
 ```bnf
-app::= inputs vars stmts
+app::= inputs vars stmts ;
 
 text::= "text" TEXT ;
 
