@@ -3,8 +3,7 @@ package fr.kisled.dsl.generator;
 import fr.kisled.kernel.App;
 import fr.kisled.kernel.DataAcquisition;
 import fr.kisled.kernel.Variable;
-import fr.kisled.kernel.dataops.DataOperation;
-import fr.kisled.kernel.dataops.Selection;
+import fr.kisled.kernel.dataops.*;
 
 import java.io.PrintStream;
 
@@ -49,7 +48,13 @@ public class PyGenerator extends Generator {
 
     private void generateDataOperation(DataOperation dataOperation, PrintStream output) {
         output.printf("%s = ", dataOperation.getOutput().getName());
-        if (dataOperation instanceof Selection)
+        if (dataOperation instanceof Apply)
+            output.printf("%s.apply(%s)\n", dataOperation.getInput().getName(), ((Apply) dataOperation).getOperation());
+        else if (dataOperation instanceof ColumnDeletion)
+            output.printf("%s.drop(%s)\n", dataOperation.getInput().getName(), ((ColumnDeletion) dataOperation).getColumn());
+        else if (dataOperation instanceof Mapping)
+            output.printf("%s.map(%s)\n", dataOperation.getInput().getName(), ((Mapping) dataOperation).getMapping());
+        else if (dataOperation instanceof Selection)
             output.printf("%s.loc%s\n", dataOperation.getInput().getName(), ((Selection) dataOperation).getFilter());
     }
 }
