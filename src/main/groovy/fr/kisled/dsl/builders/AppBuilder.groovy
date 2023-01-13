@@ -2,6 +2,7 @@ package fr.kisled.dsl.builders
 
 import fr.kisled.kernel.App
 import fr.kisled.kernel.DataAcquisition
+import fr.kisled.kernel.dataops.DataOperation
 
 class AppBuilder {
     // Register the existing variables to check validity on data operation
@@ -25,7 +26,28 @@ class AppBuilder {
     App build() {
         App app = new App()
 
-        app.setData(dataBuilders.collect {(DataAcquisition) it.build() })
+        List<DataAcquisition> dataAcquisitions = new ArrayList<>()
+        List<DataOperation> dataOperations = new ArrayList<>()
+
+        for (DataBuilder builder : dataBuilders) {
+            Object var = builder.build()
+
+            if (var instanceof DataAcquisition)
+                dataAcquisitions.add(var)
+            else if (var instanceof DataOperation) {
+                if (!variables.contains(var.getInput().getName()))
+                    throw new Exception(
+                            "Variable " +
+                                    var.getInput().getName() +
+                                    " undeclared")
+
+                variables.add(var.getOutput().getName())
+                dataOperations.add(var)
+            }
+        }
+
+        app.setData(dataAcquisitions)
+        app.setDataOperations(dataOperations)
 
         return app
     }
