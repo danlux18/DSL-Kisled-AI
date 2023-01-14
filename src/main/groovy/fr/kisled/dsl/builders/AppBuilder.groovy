@@ -1,5 +1,6 @@
 package fr.kisled.dsl.builders
 
+import fr.kisled.dsl.exception.UndeclaredVariableException
 import fr.kisled.kernel.App
 import fr.kisled.kernel.DataAcquisition
 import fr.kisled.kernel.dataops.DataOperation
@@ -36,10 +37,7 @@ class AppBuilder {
                 dataAcquisitions.add(var)
             else if (var instanceof DataOperation) {
                 if (!variables.contains(var.getInput().getName()))
-                    throw new Exception(
-                            "Variable " +
-                                    var.getInput().getName() +
-                                    " undeclared")
+                    throw new UndeclaredVariableException(var.getInput().getName())
 
                 variables.add(var.getOutput().getName())
                 dataOperations.add(var)

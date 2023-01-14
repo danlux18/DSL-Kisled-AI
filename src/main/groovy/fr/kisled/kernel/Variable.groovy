@@ -6,4 +6,14 @@ class Variable extends NamedElement {
         super
         setName(name)
     }
+
+    @Override
+    boolean equals(Object o) {
+        if (this.is(o)) return true
+        if (getClass() != o.class) return false
+
+        Variable var = (Variable) o
+
+        return getName() == var.getName()
+    }
 }
