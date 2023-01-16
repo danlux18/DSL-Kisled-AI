@@ -7,7 +7,8 @@ data "train" with "path.csv"
 //OPERATIONS
 //data VAR_NAME from VAR_NAME select FILTER (FILTER ==> "[debut_x:fin_x,debut_y:fin_y]" ou "[label]")
 data "X_train" from "train" select "[0:200,:]"
-data "Y_train" from "train" map "lambda x : x+1" delete "colum_name"
+data "Y_train" from "train" map "lambda x : x+1"
+data "Y_train" from "train" delete "colum_name"
 data "X_test" from "X_train" apply "lambda x : x/255"
 
 //HYPER PARAMETERS
