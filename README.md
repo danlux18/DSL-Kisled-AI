@@ -10,6 +10,7 @@ DSL for Data Mining
 ## Domain Model
 
 ## Backus-Naur Form
+Version 1
 ```bnf
 app ::= stmts final_result ;
 
