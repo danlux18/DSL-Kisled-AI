@@ -11,6 +11,10 @@ class DataAcquisitionBuilder extends CodeBuilder {
         this.path = path
     }
 
+    /**
+     * Put acquired data into a variable
+     * @param varname variable name
+     */
     def rightShift(VariableBuilder varname) {
         this.varname = varname.getName()
     }
