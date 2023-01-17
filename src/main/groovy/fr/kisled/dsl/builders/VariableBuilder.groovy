@@ -71,8 +71,6 @@ class VariableBuilder extends CodeBuilder {
             return val
         }
 
-        println "Mapping $map"
-
         this.mapping = "{${String.join(", ", map.collect {k, v -> "\"$k\": ${final_val(v)}"})}}"
 
         return this
