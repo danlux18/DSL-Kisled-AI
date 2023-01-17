@@ -11,28 +11,37 @@ DSL for Data Mining
 
 ## Backus-Naur Form
 ```bnf
-app::= inputs vars stmts ;
+app ::= stmts final_result ;
 
-text::= "text" TEXT ;
+stmts ::= stmt stmts | stmt ;
 
-inputs::= text inputs | input inputs | input ;
+stmt ::= var_stmt | result_stmt ;
 
-input::= "input" PATH "as" NAME ;
+var_stmt ::= NAME '=' init_stmt ;
 
-vars::= text vars | var vars | ;
+init_stmt ::= INT | '"' STRING '"' | array | function ;
 
-var::= "set" NAME "=" var_ops ;
+array ::= '[' array_elems ']' | '[' dict_elems ']' | '[' ']' ;
 
-var_ops::= NAME | "map" dict NAME | "map" fct NAME | "appy" fct NAME | "select" filter NAME | "drop" NAME NAME ;
+array_elems ::= init_stmt ',' array_elems | init_stmt ;
 
-dict::= "{" dict_items "}"
+dict_elems ::= '"' STRING '"' ':' init_stmt ',' dict_elems |  '"' STRING '"' ':' init_stmt ;
 
-dict_items::= dict_item | dict_item "," dict_items
+function ::= NAME '(' params ')' | NAME params | NAME '(' ')' ;
 
-dict_item::= key "," value
+params ::= param ',' params | param ;
 
-fct::= "func" NAME "->" OPS ";"
+param ::= NAME ':' init_stmt | init_stmt ;
 
-stmts::= 
+result_stmt ::= disp | chart ;
 
+disp ::= 'disp' params | 'disp' '(' params ')' ;
+
+chart ::= 'chart' TYPE "," values | 'chart' '(' TYPE ',' values ')' ;
+
+values ::= value ',' values | value ;
+
+value ::= NAME | init_stmt ;
+
+final_result ::= /* Left by default */ ;
 ```

@@ -17,10 +17,32 @@ class DataAcquisition {
         this.path = path
     }
 
-    def getAt(Range... ranges) {}
+    def getAt(Range... ranges) { /$this[$ranges]/ }
 }
 
 static def read(String path) { return new DataAcquisition(path) }
+
+static def btw(min=0, max=-1, step=1) { return min + max * step } // Random value from range
+@SuppressWarnings('unused') static def choice(Object[] arr) {return arr[0]} // Random value from array
+
+
+static def disp(Object... objs) { /Display value $objs/ }
+static def chart(String type, Object... objs) { /Create chart of type $type using values $objs / }
+
+class Field {
+    private String name
+    private Object[] filters
+
+    Field(String field, Object[] filters) {
+        this.name = field
+        this.filters = filters
+    }
+}
+static def f(String name, Object...filters) { return new Field(name, filters)}
+static def gt(int value) { return ['>', value] }
+static def lt(int value) { return ['<', value] }
+static def w(int weight) { return ['weight', weight] }
+static def result(Field... fields){ /Filter final result using $fields/ }
 
 // ==== Exemple ====
 /**
@@ -41,20 +63,16 @@ X_test = X_test / 255
 /**
  * ## Hyperparameter
  */
-rand_list_KNN = ['clf_knn__n_neighbors': sp_randint(1, 11), 'clf_knn__algorithm': ['auto']]
+rand_list_nb = ["clf_nb__var_smoothing": np.logspace(-9, 0, 5)]
 
 /**
  * ## Common variables
  */
 // Define parameters ex.: pca
-pca = PCA(n_components=0.95)
-kfold = StratifiedKFold(n_splits=2, shuffle = True)
+pca = PCA(n_components: 0.95)
+kfold = StratifiedKFold(n_splits: 2, shuffle: true)
 
 scoring = ['acc': 'accuracy']
-
-static def btw(min=0, max=-1, step=1) { return 0 } // Random value from range
-static def choice(Object[] arr) {return 0} // Random value from array
-
 
 /**
  * ## KNN Algorithm
@@ -62,8 +80,6 @@ static def choice(Object[] arr) {return 0} // Random value from array
 // Algo 1
 // For n_neighbors btw 0 n 50
 algo = KNN n_neighbors: btw(1, 11), algorithm: ['auto']
-// knn_pipe = ['StdScaler': StandardScaler()] | ['minmax': MinMaxScaler()] | ['pca': pca] | ['clf_kn': KNeighborsClassifier()]
-// algo = RandomizedSearchCV(estimator: knn_pipe, param_distribution: rand_list_KNN, cv: kfold, verbose: 2, n_jobs: -1, n_iter: 5)
 result_knn = validate(algo, X_train, Y_train, cv: 5, scoring: scoring) // validate stands for cross_validate method
 disp result_knn
 disp result_knn.mean(), result_knn.std()
@@ -73,10 +89,9 @@ disp result_knn.mean(), result_knn.std()
  */
 // Algo 2
 nb_pipe = ['pca': pca] | ['clf_nb': GaussianNB()]
-rand_list_nb = ["clf_nb__var_smoothing": np.logspace(-9, 0, 5)]
 algo = RandomizedSearchCV(estimator: nb_pipe, param_distribution: rand_list_nb, cv: kfold, verbose: 2, n_jobs: -1, n_iter: 5)
 result_nb = validate(algo, X_train, Y_train, cv: 5, scoring: scoring)
-chart result_nb "stick"
+chart "stick", result_nb
 
 /**
  * Random Forest Algorithm
@@ -88,4 +103,4 @@ disp result_rf.mean(), result_rf.std()
 
 //DSL value : Comparison with visualization
 // Disp. result_knn , result_nb, result_rf
-print_result 'accuracy' 'avg_time'
+result f('accuracy', gt(20), lt(30)), f('avg_time', w(50))
