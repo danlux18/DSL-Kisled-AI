@@ -2,12 +2,22 @@ package fr.kisled.dsl.generator.jupyter
 
 import fr.kisled.dsl.generator.Generator
 import fr.kisled.kernel.App
+import fr.kisled.kernel.CodeLine
+import fr.kisled.kernel.DataAcquisition
+import fr.kisled.kernel.ops.ApplyOp
+import fr.kisled.kernel.ops.DropColumnOp
+import fr.kisled.kernel.ops.MappingOp
+import fr.kisled.kernel.ops.SelectOp
 import groovy.json.JsonOutput
 
 class JupyterGenerator extends Generator {
     @Override
     void generate(App app, PrintStream output) {
         def cells = [generateMarkdownCell(["# App ${app.name}"]), generateImportCell()]
+
+        for (CodeLine line : app.codeLines) {
+            cells.add(generateCodeLine(line))
+        }
 
         def jupyter = [
                 cells: cells,
@@ -62,5 +72,25 @@ class JupyterGenerator extends Generator {
         ]
 
         return generateCodeCell(sources)
+    }
+
+    private static def generateCodeLine(CodeLine line) {
+        String code = ""
+        if (line instanceof DataAcquisition) {
+            code = "${line.varname} = pd.read_csv(\"${line.path}\")"
+        }
+        else if (line instanceof SelectOp) {
+            code = "${line.output_varname} = ${line.input_varname}${line.range}"
+        }
+        else if (line instanceof ApplyOp) {
+            code = "${line.output_varname} = ${line.input_varname}.apply(${line.lambda})"
+        }
+        else if (line instanceof DropColumnOp) {
+            code = "${line.output_varname} = ${line.input_varname}.drop(${line.dropped_column})"
+        }
+        else if (line instanceof MappingOp) {
+            code = "${line.output_varname} = ${line.input_varname}.map(${line.mapping})"
+        }
+        return generateCodeCell([code])
     }
 }
