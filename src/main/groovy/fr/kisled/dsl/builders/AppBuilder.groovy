@@ -1,51 +1,45 @@
 package fr.kisled.dsl.builders
 
-import fr.kisled.dsl.exception.UndeclaredVariableException
+import fr.kisled.dsl.builders.utils.NoOp
 import fr.kisled.kernel.App
-import fr.kisled.kernel.DataAcquisition
-import fr.kisled.kernel.dataops.DataOperation
 
 class AppBuilder {
-    // Register the existing variables to check validity on data operation
-    List<String> variables
-    List<DataBuilder> dataBuilders
+    List<CodeBuilder> lines = [] // lines of code in the order wanted by the user
 
     AppBuilder() {
-        variables = new ArrayList<>()
-        dataBuilders = new ArrayList<>()
     }
 
-    def data(String name) {
-        variables.add(name)
-        DataBuilder builder = new DataBuilder(name)
-
-        dataBuilders.add(builder)
-
+    def variable(String name) {
+        CodeBuilder builder = new VariableBuilder(name)
+        lines.add(builder)
         return builder
     }
 
-    App build() {
-        App app = new App()
+    def read(String path) {
+        CodeBuilder lineBuilder = new DataAcquisitionBuilder(path)
+        lines.add(lineBuilder)
+        return lineBuilder
+    }
 
-        List<DataAcquisition> dataAcquisitions = new ArrayList<>()
-        List<DataOperation> dataOperations = new ArrayList<>()
-
-        for (DataBuilder builder : dataBuilders) {
-            Object var = builder.build()
-
-            if (var instanceof DataAcquisition)
-                dataAcquisitions.add(var)
-            else if (var instanceof DataOperation) {
-                if (!variables.contains(var.getInput().getName()))
-                    throw new UndeclaredVariableException(var.getInput().getName())
-
-                variables.add(var.getOutput().getName())
-                dataOperations.add(var)
-            }
+    /**
+     * Build a range where start, stop and step are optional.
+     * If the start is equals to stop, then the range describe all value in a set
+     */
+    static def r(start=0, stop=0, step=1) {
+        if (start == stop) {
+            return ":"
         }
+        return step == 1 ? "$start:$stop" : "range($start, $stop, $step)"
+    }
 
-        app.setData(dataAcquisitions)
-        app.setDataOperations(dataOperations)
+    def methodMissing(String name, def args) {
+        println "Unknown method $name called"
+    }
+
+    App build(String name) {
+        App app = new App(name)
+
+        app.getCodeLines().addAll(lines.collect {it.build()}.findAll {!(it instanceof NoOp)})
 
         return app
     }

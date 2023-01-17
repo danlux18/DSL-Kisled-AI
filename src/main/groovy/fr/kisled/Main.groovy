@@ -2,7 +2,7 @@ package fr.kisled
 
 import fr.kisled.dsl.Parser
 import fr.kisled.dsl.generator.Generator
-import fr.kisled.dsl.generator.PyGenerator
+import fr.kisled.dsl.generator.python.PyGenerator
 import fr.kisled.kernel.App
 
 class Main {
