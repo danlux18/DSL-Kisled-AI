@@ -1,5 +1,6 @@
 package fr.kisled.dsl.builders
 
+import fr.kisled.dsl.builders.utils.NoOp
 import fr.kisled.kernel.App
 
 class AppBuilder {
@@ -8,41 +9,30 @@ class AppBuilder {
     AppBuilder() {
     }
 
-    App build(String name) {
-        App app = new App(name)
-
-        app.getCodeLines().addAll(lines.collect {it.build()})
-
-        return app
+    def variable(String name) {
+        CodeBuilder builder = new VariableBuilder(name)
+        lines.add(builder)
+        return builder
     }
 
     def read(String path) {
-        println "Method read ($path)"
         CodeBuilder lineBuilder = new DataAcquisitionBuilder(path)
         lines.add(lineBuilder)
         return lineBuilder
     }
 
-    Object invokeMethod(String name, Object args) {
-        println "Catch method $name ($args)"
-        return name
+    static def r(start=0, stop=0, step=1) {
+        if (start == stop) {
+            return ":"
+        }
+        return step == 1 ? "$start:$stop" : "range($start, $stop, $step)"
     }
 
-    def propertyMissing(String name, value){
-        println "Variable $name = $value"
-        return name
-    }
-    static def $static_propertyMissing(String name) {
-        println "Static variable $name"
-        return name
-    }
+    App build(String name) {
+        App app = new App(name)
 
-    def methodMissing(String name, def args) {
-        println "Method $name ($args)"
-        return name
-    }
-    static def $static_methodMissing(String name, Object args) {
-        println "Static method $name ($args)"
-        return name
+        app.getCodeLines().addAll(lines.collect {it.build()}.findAll {!(it instanceof NoOp)})
+
+        return app
     }
 }

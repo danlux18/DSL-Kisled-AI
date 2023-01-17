@@ -4,6 +4,7 @@ import fr.kisled.dsl.generator.Generator;
 import fr.kisled.kernel.App;
 import fr.kisled.kernel.CodeLine;
 import fr.kisled.kernel.DataAcquisition;
+import fr.kisled.kernel.SelectOp;
 
 import java.io.PrintStream;
 
@@ -39,9 +40,11 @@ public class PyGenerator extends Generator {
     }
 
     private void generateCodeLine(CodeLine line, PrintStream output) {
-        if (line instanceof DataAcquisition) {
-            DataAcquisition var = (DataAcquisition) line;
+        if (line instanceof DataAcquisition var) {
             output.printf("%s = pd.read_csv(\"%s\")\n", var.getVarname(), var.getPath());
+        }
+        else if (line instanceof SelectOp op) {
+            output.printf("%s = %s%s\n", op.getOutput_varname(), op.getInput_varname(), op.getRange());
         }
     }
 }

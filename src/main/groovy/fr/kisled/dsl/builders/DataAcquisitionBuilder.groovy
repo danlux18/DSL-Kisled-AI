@@ -11,9 +11,8 @@ class DataAcquisitionBuilder extends CodeBuilder {
         this.path = path
     }
 
-    def rightShift(varname) {
-        println "Var $varname = read $path"
-        this.varname = varname
+    def rightShift(VariableBuilder varname) {
+        this.varname = varname.getName()
     }
 
     @Override
