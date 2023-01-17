@@ -6,6 +6,7 @@ import fr.kisled.kernel.CodeLine;
 import fr.kisled.kernel.DataAcquisition;
 import fr.kisled.kernel.ops.ApplyOp;
 import fr.kisled.kernel.ops.DropColumnOp;
+import fr.kisled.kernel.ops.MappingOp;
 import fr.kisled.kernel.ops.SelectOp;
 
 import java.io.PrintStream;
@@ -53,6 +54,9 @@ public class PyGenerator extends Generator {
         }
         else if (line instanceof DropColumnOp op) {
             output.printf("%s = %s.drop(%s)\n", op.getOutput_varname(), op.getInput_varname(), op.getDropped_column());
+        }
+        else if (line instanceof MappingOp op) {
+            output.printf("%s = %s.map(%s)\n", op.getOutput_varname(), op.getInput_varname(), op.getMapping());
         }
     }
 }
