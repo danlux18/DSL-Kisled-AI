@@ -14,15 +14,23 @@ class Parser {
         config.scriptBaseClass = 'fr.kisled.dsl.DSLScript'
         this.shell = new GroovyShell(config)
         this.binding = new Binding()
-        this.binding.setVariable("app", new AppBuilder())
+        this.binding.setVariable("builder", new AppBuilder())
     }
 
     App parse(File file) {
         Script script = this.shell.parse(file)
         script.setBinding(this.binding)
 
-        script.run()
+        try {
+            script.run()
+        } catch (e) {
+            println "Exception while parsing " + e.message
+        }
 
-        return ((AppBuilder) this.binding.getVariable("app")).build()
+        println()
+
+        String appname = file.name.replace(".groovy", "")
+
+        return ((AppBuilder) this.binding.getVariable("builder")).build(appname)
     }
 }

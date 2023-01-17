@@ -1,6 +1,6 @@
 import fr.kisled.dsl.Parser
 import fr.kisled.dsl.generator.Generator
-import fr.kisled.dsl.generator.PyGenerator
+import fr.kisled.dsl.generator.python.PyGenerator
 import fr.kisled.kernel.App
 import fr.kisled.kernel.DataAcquisition
 import org.junit.jupiter.api.BeforeEach

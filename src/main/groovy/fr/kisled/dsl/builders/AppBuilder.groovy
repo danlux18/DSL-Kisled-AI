@@ -1,52 +1,48 @@
 package fr.kisled.dsl.builders
 
-import fr.kisled.dsl.exception.UndeclaredVariableException
 import fr.kisled.kernel.App
-import fr.kisled.kernel.DataAcquisition
-import fr.kisled.kernel.dataops.DataOperation
 
 class AppBuilder {
-    // Register the existing variables to check validity on data operation
-    List<String> variables
-    List<DataBuilder> dataBuilders
+    List<CodeBuilder> lines = []
 
     AppBuilder() {
-        variables = new ArrayList<>()
-        dataBuilders = new ArrayList<>()
     }
 
-    def data(String name) {
-        variables.add(name)
-        DataBuilder builder = new DataBuilder(name)
+    App build(String name) {
+        App app = new App(name)
 
-        dataBuilders.add(builder)
-
-        return builder
-    }
-
-    App build() {
-        App app = new App()
-
-        List<DataAcquisition> dataAcquisitions = new ArrayList<>()
-        List<DataOperation> dataOperations = new ArrayList<>()
-
-        for (DataBuilder builder : dataBuilders) {
-            Object var = builder.build()
-
-            if (var instanceof DataAcquisition)
-                dataAcquisitions.add(var)
-            else if (var instanceof DataOperation) {
-                if (!variables.contains(var.getInput().getName()))
-                    throw new UndeclaredVariableException(var.getInput().getName())
-
-                variables.add(var.getOutput().getName())
-                dataOperations.add(var)
-            }
-        }
-
-        app.setData(dataAcquisitions)
-        app.setDataOperations(dataOperations)
+        app.getCodeLines().addAll(lines.collect {it.build()})
 
         return app
+    }
+
+    def read(String path) {
+        println "Method read ($path)"
+        CodeBuilder lineBuilder = new DataAcquisitionBuilder(path)
+        lines.add(lineBuilder)
+        return lineBuilder
+    }
+
+    Object invokeMethod(String name, Object args) {
+        println "Catch method $name ($args)"
+        return name
+    }
+
+    def propertyMissing(String name, value){
+        println "Variable $name = $value"
+        return name
+    }
+    static def $static_propertyMissing(String name) {
+        println "Static variable $name"
+        return name
+    }
+
+    def methodMissing(String name, def args) {
+        println "Method $name ($args)"
+        return name
+    }
+    static def $static_methodMissing(String name, Object args) {
+        println "Static method $name ($args)"
+        return name
     }
 }
