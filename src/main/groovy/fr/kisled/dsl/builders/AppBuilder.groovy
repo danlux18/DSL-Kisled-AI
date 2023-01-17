@@ -4,7 +4,7 @@ import fr.kisled.dsl.builders.utils.NoOp
 import fr.kisled.kernel.App
 
 class AppBuilder {
-    List<CodeBuilder> lines = [] // TODO
+    List<CodeBuilder> lines = [] // lines of code in the order wanted by the user
 
     AppBuilder() {
     }

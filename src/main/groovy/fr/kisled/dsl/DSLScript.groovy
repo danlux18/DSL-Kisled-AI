@@ -27,7 +27,6 @@ abstract class DSLScript extends Script {
         if (builder == null) {
             builder = ((AppBuilder) this.binding.getVariable("builder"));
         }
-//        println "Method $name ($args)"
         return builder.invokeMethod(name, args)
     }
 }
