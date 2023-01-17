@@ -3,6 +3,7 @@ package fr.kisled.dsl.builders
 import fr.kisled.dsl.builders.utils.NoOp
 import fr.kisled.kernel.CodeLine
 import fr.kisled.kernel.ops.ApplyOp
+import fr.kisled.kernel.ops.DropColumnOp
 import fr.kisled.kernel.ops.SelectOp
 
 class VariableBuilder extends CodeBuilder {
@@ -10,6 +11,7 @@ class VariableBuilder extends CodeBuilder {
     String output_varname
     String selection = null
     String apply_lambda = null
+    String dropped_column = null
 
     VariableBuilder(String name) {
         this.name = name
@@ -75,7 +77,12 @@ class VariableBuilder extends CodeBuilder {
      * @return The current builder to put it in a variable
      */
     def minus(val) {
-        this.apply_lambda = "lambda x: x - $val"
+        if (val instanceof String)
+            dropped_column = "\"$val\""
+        else if (val instanceof ArrayList)
+            dropped_column = "$val"
+        else
+            this.apply_lambda = "lambda x: x - $val"
         return this
     }
 
@@ -102,6 +109,8 @@ class VariableBuilder extends CodeBuilder {
         if (output_varname == null) return new NoOp() // The operation is not properly formatted
         else if (apply_lambda != null)
             return new ApplyOp(input_varname: name, output_varname: output_varname, lambda: apply_lambda)
+        else if (dropped_column != null)
+            return new DropColumnOp(input_varname: name, output_varname: output_varname, dropped_column: dropped_column)
         return new SelectOp(input_varname: name, output_varname: output_varname, range: selection)
     }
 }

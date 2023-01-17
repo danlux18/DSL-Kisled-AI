@@ -21,6 +21,10 @@ class AppBuilder {
         return lineBuilder
     }
 
+    /**
+     * Build a range where start, stop and step are optional.
+     * If the start is equals to stop, then the range describe all value in a set
+     */
     static def r(start=0, stop=0, step=1) {
         if (start == stop) {
             return ":"
