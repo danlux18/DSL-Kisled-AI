@@ -28,6 +28,10 @@ class AppBuilder {
         return step == 1 ? "$start:$stop" : "range($start, $stop, $step)"
     }
 
+    def methodMissing(String name, def args) {
+        println "Unknown method $name called"
+    }
+
     App build(String name) {
         App app = new App(name)
 

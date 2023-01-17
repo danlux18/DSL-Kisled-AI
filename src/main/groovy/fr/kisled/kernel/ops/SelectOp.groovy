@@ -1,4 +1,6 @@
-package fr.kisled.kernel
+package fr.kisled.kernel.ops
+
+import fr.kisled.kernel.CodeLine
 
 class SelectOp extends CodeLine {
     String input_varname = ""
