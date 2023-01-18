@@ -43,7 +43,7 @@ disp result_knn.mean(), result_knn.std()
  * Naive Bayes Algorithm
  */
 // Algo 2
-    nb_pipe = ['pca': pca] | ['clf_nb': GaussianNB()]
+nb_pipe = ['pca': pca] | ['clf_nb': GaussianNB()]
 algo = RandomizedSearchCV(estimator: nb_pipe, param_distribution: rand_list_nb, cv: kfold, verbose: 2, n_jobs: -1, n_iter: 5)
 result_nb = validate(algo, X_train, Y_train, cv: 5, scoring: scoring)
 chart "stick", result_nb

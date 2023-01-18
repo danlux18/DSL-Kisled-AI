@@ -1,17 +1,13 @@
 package fr.kisled.dsl.generator.python;
 
-import fr.kisled.dsl.generator.Generator;
+import fr.kisled.dsl.generator.algorithm.Generator;
+import fr.kisled.dsl.generator.algorithm.GeneratorStrategy;
 import fr.kisled.kernel.App;
 import fr.kisled.kernel.CodeLine;
-import fr.kisled.kernel.DataAcquisition;
-import fr.kisled.kernel.ops.ApplyOp;
-import fr.kisled.kernel.ops.DropColumnOp;
-import fr.kisled.kernel.ops.MappingOp;
-import fr.kisled.kernel.ops.SelectOp;
 
 import java.io.PrintStream;
 
-public class PyGenerator extends Generator {
+public class PyGenerator extends fr.kisled.dsl.generator.Generator {
     @Override
     public void generate(App app, PrintStream output) {
         output.println("\"\"\" App " + app.getName() + " \"\"\"");
@@ -43,20 +39,12 @@ public class PyGenerator extends Generator {
     }
 
     private void generateCodeLine(CodeLine line, PrintStream output) {
-        if (line instanceof DataAcquisition var) {
-            output.printf("%s = pd.read_csv(\"%s\")\n", var.getVarname(), var.getPath());
-        }
-        else if (line instanceof SelectOp op) {
-            output.printf("%s = %s%s\n", op.getOutput_varname(), op.getInput_varname(), op.getRange());
-        }
-        else if (line instanceof ApplyOp op) {
-            output.printf("%s = %s.apply(%s)\n", op.getOutput_varname(), op.getInput_varname(), op.getLambda());
-        }
-        else if (line instanceof DropColumnOp op) {
-            output.printf("%s = %s.drop(%s)\n", op.getOutput_varname(), op.getInput_varname(), op.getDropped_column());
-        }
-        else if (line instanceof MappingOp op) {
-            output.printf("%s = %s.map(%s)\n", op.getOutput_varname(), op.getInput_varname(), op.getMapping());
+        try {
+            GeneratorStrategy generator = line.getClass().getAnnotation(Generator.class).generator().getDeclaredConstructor().newInstance();
+            String[] sources = generator.toPython(line);
+            output.println(String.join("\n", sources));
+        } catch (Exception e) {
+            System.out.println("Exception during generation: " + e.getMessage());
         }
     }
 }
