@@ -5,20 +5,31 @@ import fr.kisled.dsl.generator.Generator
 import fr.kisled.dsl.generator.jupyter.JupyterGenerator
 import fr.kisled.dsl.generator.python.PyGenerator
 import fr.kisled.kernel.App
+import groovy.cli.picocli.CliBuilder
 
 class Main {
     static void main(String... args) {
+        def cli = new CliBuilder(name: "kisled-ai")
+        def options = new OptionClass()
+        cli.parseFromInstance(options, args)
+
         Parser parser = new Parser()
-        Generator generator = new JupyterGenerator()
-        for (String arg : args) {
+        Generator generator = options.extension == 'py' ? new PyGenerator() : new JupyterGenerator()
+
+        boolean output_defined = options.output != null && options.output != ""
+        File result = null;
+        if (output_defined)
+            result = new File(options.output)
+
+        PrintStream output = output_defined ? new PrintStream(result) : System.out
+
+        for (String arg : options.sources) {
             App app = parser.parse(new File(arg))
 
-            File result = new File("../${app.name}.ipynb")
-            PrintStream output = new PrintStream(result)
-
             generator.generate(app, output)
-
-            output.close()
         }
+
+        if (output_defined)
+            output.close()
     }
 }
