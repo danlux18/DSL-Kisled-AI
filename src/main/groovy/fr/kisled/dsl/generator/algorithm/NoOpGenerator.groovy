@@ -5,7 +5,7 @@ import fr.kisled.kernel.CodeLine
 
 class NoOpGenerator extends GeneratorStrategy {
     @Override
-    String[] toPython(CodeLine noop) {
+    List<String> toPython(CodeLine noop) {
         return new String[0]
     }
 }

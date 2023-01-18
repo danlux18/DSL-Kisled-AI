@@ -5,7 +5,7 @@ import fr.kisled.kernel.algorithm.KNN
 
 class KNNGenerator extends GeneratorStrategy {
     @Override
-    String[] toPython(CodeLine algo) {
+    List<String> toPython(CodeLine algo) {
         if (algo instanceof KNN)
             return [ "KNN ()" ]
         throw new IllegalArgumentException()

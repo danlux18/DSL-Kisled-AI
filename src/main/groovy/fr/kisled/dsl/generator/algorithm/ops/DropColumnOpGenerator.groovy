@@ -6,7 +6,7 @@ import fr.kisled.kernel.ops.DropColumnOp
 
 class DropColumnOpGenerator extends GeneratorStrategy {
     @Override
-    String[] toPython(CodeLine line) {
+    List<String> toPython(CodeLine line) {
         if (line instanceof DropColumnOp)
             return [
                     line.output_varname +

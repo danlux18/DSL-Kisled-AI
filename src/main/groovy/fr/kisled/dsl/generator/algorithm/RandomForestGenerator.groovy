@@ -5,7 +5,7 @@ import fr.kisled.kernel.algorithm.RandomForest
 
 class RandomForestGenerator extends GeneratorStrategy {
     @Override
-    String[] toPython(CodeLine algo) {
+    List<String> toPython(CodeLine algo) {
         if (algo instanceof RandomForest)
             return [ "RandomForest ()" ]
         throw new IllegalArgumentException()

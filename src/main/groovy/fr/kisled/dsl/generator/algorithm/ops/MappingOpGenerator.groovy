@@ -6,7 +6,7 @@ import fr.kisled.kernel.ops.MappingOp
 
 class MappingOpGenerator extends GeneratorStrategy {
     @Override
-    String[] toPython(CodeLine line) {
+    List<String> toPython(CodeLine line) {
         if (line instanceof MappingOp)
             return [
                     line.output_varname +

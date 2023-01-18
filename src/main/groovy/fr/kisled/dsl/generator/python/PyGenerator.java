@@ -6,6 +6,7 @@ import fr.kisled.kernel.App;
 import fr.kisled.kernel.CodeLine;
 
 import java.io.PrintStream;
+import java.util.List;
 
 public class PyGenerator extends fr.kisled.dsl.generator.Generator {
     @Override
@@ -41,8 +42,8 @@ public class PyGenerator extends fr.kisled.dsl.generator.Generator {
     private void generateCodeLine(CodeLine line, PrintStream output) {
         try {
             GeneratorStrategy generator = line.getClass().getAnnotation(Generator.class).generator().getDeclaredConstructor().newInstance();
-            String[] sources = generator.toPython(line);
-            output.println(String.join("\n", sources));
+            List<String> sources = generator.toPython(line);
+            output.println(String.join("\n", sources.toArray(new String[0])));
         } catch (Exception e) {
             System.out.println("Exception during generation: " + e.getMessage());
         }
