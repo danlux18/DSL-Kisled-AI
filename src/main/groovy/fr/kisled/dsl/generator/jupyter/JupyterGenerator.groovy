@@ -1,13 +1,9 @@
 package fr.kisled.dsl.generator.jupyter
 
 import fr.kisled.dsl.generator.Generator
+import fr.kisled.dsl.generator.algorithm.GeneratorStrategy
 import fr.kisled.kernel.App
 import fr.kisled.kernel.CodeLine
-import fr.kisled.kernel.DataAcquisition
-import fr.kisled.kernel.ops.ApplyOp
-import fr.kisled.kernel.ops.DropColumnOp
-import fr.kisled.kernel.ops.MappingOp
-import fr.kisled.kernel.ops.SelectOp
 import groovy.json.JsonOutput
 
 class JupyterGenerator extends Generator {
@@ -75,22 +71,18 @@ class JupyterGenerator extends Generator {
     }
 
     private static def generateCodeLine(CodeLine line) {
-        String code = ""
-        if (line instanceof DataAcquisition) {
-            code = "${line.varname} = pd.read_csv(\"${line.path}\")"
+        try {
+            GeneratorStrategy generator = line.getClass()
+                    .getAnnotation(fr.kisled.dsl.generator.algorithm.Generator.class)
+                    .generator().getConstructor().newInstance()
+
+            List<String> lines = generator.toPython(line).collect {"" + it + "\n"}
+            lines.add(lines.removeLast().replace("\n", ""))
+
+            return generateCodeCell(lines)
+
+        } catch (Exception e) {
+            println("Exception during generation: " + e.getMessage())
         }
-        else if (line instanceof SelectOp) {
-            code = "${line.output_varname} = ${line.input_varname}${line.range}"
-        }
-        else if (line instanceof ApplyOp) {
-            code = "${line.output_varname} = ${line.input_varname}.apply(${line.lambda})"
-        }
-        else if (line instanceof DropColumnOp) {
-            code = "${line.output_varname} = ${line.input_varname}.drop(${line.dropped_column})"
-        }
-        else if (line instanceof MappingOp) {
-            code = "${line.output_varname} = ${line.input_varname}.map(${line.mapping})"
-        }
-        return generateCodeCell([code])
     }
 }

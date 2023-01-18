@@ -32,6 +32,31 @@ class AppBuilder {
         return step == 1 ? "$start:$stop" : "range($start, $stop, $step)"
     }
 
+    static def btw(start, stop) {
+        println "randint($start, $stop)"
+        return "randint($start, $stop)"
+    }
+
+    static def choice(array) {
+        println "choice($array)"
+        return "choice($array)"
+    }
+
+    def KNN(def hparams) {
+        CodeBuilder builder = new AlgorithmBuilder()
+        lines.add(builder)
+        return builder.KNN(hparams['n_neighbors'], hparams['algorithm'])
+    }
+
+    def RandomForest(def hparams) {
+        CodeBuilder builder = new AlgorithmBuilder()
+        lines.add(builder)
+        return builder.RandomForest(
+                hparams['n_estimators'],
+                hparams['max_depth']
+        )
+    }
+
     def methodMissing(String name, def args) {
         println "Unknown method $name called"
     }
