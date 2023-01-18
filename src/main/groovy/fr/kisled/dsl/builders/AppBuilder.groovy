@@ -52,12 +52,8 @@ class AppBuilder {
         CodeBuilder builder = new AlgorithmBuilder()
         lines.add(builder)
         return builder.RandomForest(
-                hparams['max_depth'],
-                hparams['max_features'],
-                hparams['min_samples_split'],
-                hparams['min_samples_leaf'],
-                hparams['bootstrap'],
-                hparams['criterion']
+                hparams['n_estimators'],
+                hparams['max_depth']
         )
     }
 

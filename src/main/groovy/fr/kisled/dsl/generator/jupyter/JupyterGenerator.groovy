@@ -76,7 +76,10 @@ class JupyterGenerator extends Generator {
                     .getAnnotation(fr.kisled.dsl.generator.algorithm.Generator.class)
                     .generator().getConstructor().newInstance()
 
-            return generateCodeCell(generator.toPython(line))
+            List<String> lines = generator.toPython(line).collect {"" + it + "\n"}
+            lines.add(lines.removeLast().replace("\n", ""))
+
+            return generateCodeCell(lines)
 
         } catch (Exception e) {
             println("Exception during generation: " + e.getMessage())
