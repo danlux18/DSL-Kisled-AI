@@ -58,5 +58,6 @@ public class PyGenerator extends Generator {
         else if (line instanceof MappingOp op) {
             output.printf("%s = %s.map(%s)\n", op.getOutput_varname(), op.getInput_varname(), op.getMapping());
         }
+        else if(line instanceof )
     }
 }

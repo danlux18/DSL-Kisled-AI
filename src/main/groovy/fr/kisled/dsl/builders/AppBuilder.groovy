@@ -21,6 +21,18 @@ class AppBuilder {
         return lineBuilder
     }
 
+    def disp(args) {
+        CodeBuilder builder = new VisualizationBuilder()
+        lines.add(builder)
+        return builder
+    }
+
+    def chart(String name) {
+        CodeBuilder builder = new VisualizationBuilder(name)
+        lines.add(builder)
+        return builder
+    }
+
     /**
      * Build a range where start, stop and step are optional.
      * If the start is equals to stop, then the range describe all value in a set
