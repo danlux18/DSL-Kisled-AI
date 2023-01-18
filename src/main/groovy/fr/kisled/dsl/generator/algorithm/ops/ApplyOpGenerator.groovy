@@ -6,7 +6,7 @@ import fr.kisled.kernel.ops.ApplyOp
 
 class ApplyOpGenerator extends GeneratorStrategy {
     @Override
-    String[] toPython(CodeLine line) {
+    List<String> toPython(CodeLine line) {
         if (line instanceof ApplyOp)
             return [
                     line.output_varname +

@@ -6,7 +6,7 @@ import fr.kisled.kernel.ops.SelectOp
 
 class SelectOpGenerator extends GeneratorStrategy {
     @Override
-    String[] toPython(CodeLine line) {
+    List<String> toPython(CodeLine line) {
         if (line instanceof SelectOp)
             return [
                     line.output_varname +

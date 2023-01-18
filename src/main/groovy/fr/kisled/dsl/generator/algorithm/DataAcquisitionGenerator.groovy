@@ -5,9 +5,9 @@ import fr.kisled.kernel.DataAcquisition
 
 class DataAcquisitionGenerator extends GeneratorStrategy {
     @Override
-    String[] toPython(CodeLine line) {
+    List<String> toPython(CodeLine line) {
         if (line instanceof DataAcquisition)
-            return [ line.varname + " = pd.read_csv(" + line.path + ")" ]
+            return [ line.varname + " = pd.read_csv(\"" + line.path + "\")" ]
         throw new IllegalArgumentException();
     }
 }
