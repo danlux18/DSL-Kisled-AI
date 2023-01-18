@@ -11,20 +11,14 @@ class AlgorithmBuilder extends CodeBuilder {
 
     def KNN(n_neighbors, algorithm) {
         this.algorithm = new KNN(n_neighbors: n_neighbors, algorithm: algorithm)
-        println "KNN ($n_neighbors, $algorithm)"
         return this
     }
 
-    def RandomForest(max_depth, max_features, min_samples_split, min_samples_leaf, bootstrap, criterion) {
+    def RandomForest(n_estimators, max_depth) {
         algorithm = new RandomForest(
-                max_depth: max_depth,
-                max_features: max_features,
-                min_samples_split: min_samples_split,
-                min_samples_leaf: min_samples_leaf,
-                bootstrap: bootstrap,
-                criterion: criterion
+                n_estimators: n_estimators,
+                max_depth: max_depth
         )
-        println "RandomForest ($max_depth, $max_features, $min_samples_split, $min_samples_leaf, $bootstrap, $criterion)"
         return this
     }
 
@@ -33,8 +27,8 @@ class AlgorithmBuilder extends CodeBuilder {
         return this
     }
 
-    def rightShift(VariableBuilder var) {
-        this.varname = var.name
+    def rightShift(VariableBuilder v) {
+        this.varname = v.getName()
     }
 
     @Override

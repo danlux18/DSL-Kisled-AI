@@ -12,3 +12,4 @@ RandomForest(max_depth: [5], max_features: btw(1, 11), min_samples_split: btw(2,
 
 disp result_knn
 //chart "stick", result_nb
+
