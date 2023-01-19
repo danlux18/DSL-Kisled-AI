@@ -9,9 +9,9 @@ class VisualizationBuilder extends CodeBuilder {
     String xLabel
     String yLabel
 
-    VisualizationBuilder(List<String> names, String xLabel, String yLabel) {
+    VisualizationBuilder(List<String> names, List<Number> results, String xLabel, String yLabel) {
         this.names = names.toArray(new String[0])
-        this.results = [1,2,3,4]
+        this.results = results
         this.xLabel = xLabel
         this.yLabel = yLabel
     }
