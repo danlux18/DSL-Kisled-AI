@@ -9,5 +9,6 @@ X_train >> ['female': 1, 'male': 0] >> X_test
 KNN(n_neighbors: btw(1, 11), algorithm: ['auto']) >> knn_algo
 
 RandomForest(n_estimators: btw(299, 300), max_depth: 10) >> rf_algo
-disp result_knn
+disp X_test, X_train
 //chart "stick", result_nb
+chart X_test

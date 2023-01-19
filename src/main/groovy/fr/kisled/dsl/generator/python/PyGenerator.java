@@ -48,6 +48,5 @@ public class PyGenerator extends fr.kisled.dsl.generator.Generator {
             System.out.println("Exception during generation: " + e.getMessage());
             e.printStackTrace();
         }
-        else if(line instanceof )
     }
 }

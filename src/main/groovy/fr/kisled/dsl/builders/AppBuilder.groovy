@@ -22,14 +22,8 @@ class AppBuilder {
         return lineBuilder
     }
 
-    def disp(args) {
-        CodeBuilder builder = new VisualizationBuilder()
-        lines.add(builder)
-        return builder
-    }
-
-    def chart(String name) {
-        CodeBuilder builder = new VisualizationBuilder(name)
+    def chart(VariableBuilder variable) {
+        CodeBuilder builder = new VisualizationBuilder([variable.getName(),"var_2","var_3","var_4"],"xLabel","yLabel")
         lines.add(builder)
         return builder
     }
@@ -68,6 +62,13 @@ class AppBuilder {
                 hparams['n_estimators'],
                 hparams['max_depth']
         )
+    }
+
+    def disp(VariableBuilder... variables) {
+        print("Disp with : "+variables.collect{it.getName()})
+        CodeBuilder builder = new PrinterBuilder(variables.collect{it.getName()})
+        lines.add(builder)
+        return builder
     }
 
     def methodMissing(String name, def args) {
