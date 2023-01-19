@@ -6,6 +6,7 @@ import fr.kisled.kernel.DataAcquisition
 import fr.kisled.kernel.Validation
 import fr.kisled.kernel.algorithm.Algorithm
 import fr.kisled.kernel.ops.Op
+import fr.kisled.kernel.visualization.Printer
 
 import java.util.function.Function
 
@@ -43,11 +44,22 @@ class Validator {
         return pass
     }
 
-    private static boolean checkIfVariableExist(List<String> variables, String variable, int lineno) {
-        if (!variables.contains(variable)) {
+    private static boolean checkIfVariableExist(Map<String, String> variables, String variable, String expectedType, int lineno) {
+        if (!variables.containsKey(variable)) {
             System.err.printf("Variable \"%s\" undefined (line %d)\n", variable, lineno)
             return false
         }
+
+        if (expectedType != null && expectedType != variables.get(variable)) {
+            System.err.printf(
+                    "Variable \"%s\" is of type %s but type %s was expected (line %d)\n",
+                    variable,
+                    variables.get(variable),
+                    expectedType,
+                    lineno)
+            return false
+        }
+
         return true
     }
 
@@ -55,25 +67,30 @@ class Validator {
      * Variable defined before being used
      */
     private static boolean variableUsedAfterBeingDefined(List<CodeLine> lines) {
-        List<String> variables = []
+        Map<String, String> variables = [:]
         boolean pass = true
         int lineno = 1
         for (CodeLine line : lines) {
             if (line instanceof DataAcquisition) {
-                variables.add(line.varname)
+                variables.put(line.varname, "Dataframe")
             }
             else if (line instanceof Op) {
-                pass &= checkIfVariableExist(variables, line.input_varname, lineno)
-                variables.add(line.output_varname)
+                pass &= checkIfVariableExist(variables, line.input_varname, "Dataframe", lineno)
+                variables.put(line.output_varname, "Dataframe")
             }
             else if (line instanceof Algorithm) {
-                variables.add(line.output_varname)
+                variables.put(line.output_varname, "Algorithm")
             }
             else if (line instanceof Validation) {
-                pass &= checkIfVariableExist(variables, line.algo, lineno)
-                pass &= checkIfVariableExist(variables, line.x, lineno)
-                pass &= checkIfVariableExist(variables, line.y, lineno)
-                variables.add(line.varname)
+                pass &= checkIfVariableExist(variables, line.algo, "Algorithm", lineno)
+                pass &= checkIfVariableExist(variables, line.x, "Dataframe", lineno)
+                pass &= checkIfVariableExist(variables, line.y, "Dataframe", lineno)
+                variables.put(line.varname, "Result")
+            }
+            else if (line instanceof Printer) {
+                for (String varname : line.varnames) {
+                    pass &= checkIfVariableExist(variables, varname, null, lineno)
+                }
             }
             lineno++
         }

@@ -1,3 +1,3 @@
 read ("path.csv") >> test
 
-train[r(0, 200), r()] >> X_train
+validate(test, X_train, Y_train, cv: 5, scoring: ['acc': 'accuracy']) >> result_nb
