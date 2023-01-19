@@ -2,6 +2,7 @@ package fr.kisled.dsl.builders
 
 import fr.kisled.dsl.builders.utils.NoOp
 import fr.kisled.kernel.App
+import fr.kisled.kernel.Validation
 
 class AppBuilder {
     List<CodeBuilder> lines = [] // lines of code in the order wanted by the user
@@ -77,6 +78,12 @@ class AppBuilder {
         App app = new App(name)
 
         app.getCodeLines().addAll(lines.collect {it.build()}.findAll {!(it instanceof NoOp)})
+
+        app.setResults(
+                app.getCodeLines()
+                        .collect {it instanceof Validation ? it.varname : null}
+                        .findAll { it != null }
+        )
 
         return app
     }
