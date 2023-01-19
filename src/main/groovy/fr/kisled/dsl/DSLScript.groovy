@@ -14,6 +14,9 @@ abstract class DSLScript extends Script {
     def getProperty(String name) {
         if (name == "binding")
             return super.getBinding() // Return the bindings
+        if (builder == null) {
+            builder = ((AppBuilder) this.binding.getVariable("builder"));
+        }
         return builder.variable(name)
     }
 

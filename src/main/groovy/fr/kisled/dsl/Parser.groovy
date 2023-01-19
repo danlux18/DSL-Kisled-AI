@@ -32,6 +32,13 @@ class Parser {
 
         String appname = file.name.replace(".groovy", "")
 
-        return ((AppBuilder) this.binding.getVariable("builder")).build(appname)
+        App app = ((AppBuilder) this.binding.getVariable("builder")).build(appname)
+
+        Validator validator = new Validator()
+
+        if (!validator.validate(app))
+            throw new AppValidationException()
+
+        return app
     }
 }
