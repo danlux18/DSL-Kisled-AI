@@ -57,6 +57,12 @@ class AppBuilder {
         )
     }
 
+    def validate(def kwargs, VariableBuilder algo, VariableBuilder X_train, VariableBuilder Y_train) {
+        CodeBuilder builder = new ValidationBuilder(algo, X_train, Y_train, kwargs)
+        lines.add(builder)
+        return builder
+    }
+
     def methodMissing(String name, def args) {
         println "Unknown method $name called"
     }
