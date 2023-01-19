@@ -56,7 +56,7 @@ class Validator {
      */
     private static boolean variableUsedAfterBeingDefined(List<CodeLine> lines) {
         List<String> variables = []
-        boolean pass = true;
+        boolean pass = true
         int lineno = 1
         for (CodeLine line : lines) {
             if (line instanceof DataAcquisition) {
