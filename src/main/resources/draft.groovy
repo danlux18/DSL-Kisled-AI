@@ -11,3 +11,5 @@ validate(knn_algo, X_train, Y_train, cv: 5, scoring: ['acc': 'accuracy']) >> res
 
 RandomForest(n_estimators: btw(299, 300), max_depth: 10) >> rf_algo
 validate(rf_algo, X_train, Y_train, cv: 5, scoring: ['acc': 'accuracy']) >> result_nb
+disp X_test, X_train
+chart "title", "xLabel", "yLabel"

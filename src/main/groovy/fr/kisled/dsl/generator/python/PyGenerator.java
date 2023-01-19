@@ -20,6 +20,7 @@ public class PyGenerator extends fr.kisled.dsl.generator.Generator {
         for (CodeLine line : app.getCodeLines()) {
             generateCodeLine(line, output);
         }
+        generateChart(app.getResults(),app.getResultsNames(),output);
     }
 
     private void generateImports(PrintStream output) {
@@ -46,6 +47,28 @@ public class PyGenerator extends fr.kisled.dsl.generator.Generator {
             output.println(String.join("\n", sources.toArray(new String[0])));
         } catch (Exception e) {
             System.out.println("Exception during generation: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void generateChart(List<String> results, List<String> resultsNames, PrintStream output){
+        try {
+            output.printf(
+                    """
+                    chart_results = [%s]
+                    chart_names = [%s]
+                    plt.figure(figsize=(%d,%d))
+                    graph = plt.barh(chart_names, chart_results)
+                    """,
+                    String.join(", ", results),
+                    String.join(", ", resultsNames),
+                    resultsNames.size(),
+                    results.size()
+
+            );
+        }
+        catch (Exception e){
+            System.out.println("Exception during generation of chart: " + e.getMessage());
             e.printStackTrace();
         }
     }

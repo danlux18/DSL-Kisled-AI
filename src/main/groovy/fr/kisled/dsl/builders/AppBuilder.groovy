@@ -2,6 +2,7 @@ package fr.kisled.dsl.builders
 
 import fr.kisled.dsl.builders.utils.NoOp
 import fr.kisled.kernel.App
+import fr.kisled.kernel.Validation
 
 class AppBuilder {
     List<CodeBuilder> lines = [] // lines of code in the order wanted by the user
@@ -19,6 +20,12 @@ class AppBuilder {
         CodeBuilder lineBuilder = new DataAcquisitionBuilder(path)
         lines.add(lineBuilder)
         return lineBuilder
+    }
+
+    def chart(String title, String xLabel, String yLabel) {
+        CodeBuilder builder = new VisualizationBuilder(title, xLabel, yLabel)
+        lines.add(builder)
+        return builder
     }
 
     /**
@@ -55,6 +62,12 @@ class AppBuilder {
         )
     }
 
+    def disp(VariableBuilder... variables) {
+        CodeBuilder builder = new PrinterBuilder(variables.collect{it.getName()})
+        lines.add(builder)
+        return builder
+    }
+
     def validate(def kwargs, VariableBuilder algo, VariableBuilder X_train, VariableBuilder Y_train) {
         CodeBuilder builder = new ValidationBuilder(algo, X_train, Y_train, kwargs)
         lines.add(builder)
@@ -69,6 +82,18 @@ class AppBuilder {
         App app = new App(name)
 
         app.getCodeLines().addAll(lines.collect {it.build()}.findAll {!(it instanceof NoOp)})
+
+        app.setResults(
+                app.getCodeLines()
+                        .collect {it instanceof Validation ? it.varname : null}
+                        .findAll { it != null }
+        )
+
+        app.setResultsNames(
+                app.getCodeLines()
+                        .collect {it instanceof Validation ? it.algo : null}
+                        .findAll { it != null }
+        )
 
         return app
     }
