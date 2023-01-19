@@ -1,5 +1,6 @@
 package fr.kisled
 
+import fr.kisled.dsl.AppValidationException
 import fr.kisled.dsl.Parser
 import fr.kisled.dsl.generator.Generator
 import fr.kisled.dsl.generator.jupyter.JupyterGenerator
@@ -24,9 +25,13 @@ class Main {
         PrintStream output = output_defined ? new PrintStream(result) : System.out
 
         for (String arg : options.sources) {
-            App app = parser.parse(new File(arg))
+            try {
+                App app = parser.parse(new File(arg))
 
-            generator.generate(app, output)
+                generator.generate(app, output)
+            } catch (AppValidationException ignored) {
+                System.err.printf ("Parsing of %s failed\n", arg)
+            }
         }
 
         if (output_defined)

@@ -33,12 +33,10 @@ class AppBuilder {
     }
 
     static def btw(start, stop) {
-        println "randint($start, $stop)"
         return "randint($start, $stop)"
     }
 
     static def choice(array) {
-        println "choice($array)"
         return "choice($array)"
     }
 
