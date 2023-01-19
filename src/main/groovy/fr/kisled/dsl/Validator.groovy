@@ -6,6 +6,8 @@ import fr.kisled.kernel.DataAcquisition
 import fr.kisled.kernel.Validation
 import fr.kisled.kernel.algorithm.Algorithm
 import fr.kisled.kernel.ops.Op
+import fr.kisled.kernel.ops.SelectOp
+import fr.kisled.kernel.utils.Range
 import fr.kisled.kernel.visualization.Printer
 
 import java.util.function.Function
@@ -63,6 +65,31 @@ class Validator {
         return true
     }
 
+    private static boolean checkRange(Range range) {
+        if (range.start == null || range.stop == null || range.start < range.stop)
+            return true
+        System.err.printf(
+                "Range (start = %d, stop = %d, step = %d) badly formatted\n",
+                range.start,
+                range.stop,
+                range.step
+        )
+        return false
+    }
+
+    private static boolean checkSelectionCriteria(SelectOp op) {
+        boolean pass = true
+
+        if (op.range instanceof Range)
+            pass &= checkRange(op.range as Range)
+        else if (op.range instanceof List)
+            for (Object criteria : op.range)
+                if (criteria instanceof Range)
+                    pass &= checkRange(criteria)
+
+        return pass
+    }
+
     /**
      * Variable defined before being used
      */
@@ -76,6 +103,10 @@ class Validator {
             }
             else if (line instanceof Op) {
                 pass &= checkIfVariableExist(variables, line.input_varname, "Dataframe", lineno)
+
+                if (line instanceof SelectOp)
+                    pass &= checkSelectionCriteria(line)
+
                 variables.put(line.output_varname, "Dataframe")
             }
             else if (line instanceof Algorithm) {

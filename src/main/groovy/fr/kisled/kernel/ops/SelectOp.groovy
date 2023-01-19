@@ -5,5 +5,5 @@ import fr.kisled.dsl.generator.algorithm.ops.SelectOpGenerator
 
 @Generator(generator = SelectOpGenerator.class)
 class SelectOp extends Op {
-    String range
+    Object range // Can be an int, a string or a range
 }
