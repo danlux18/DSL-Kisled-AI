@@ -40,12 +40,10 @@ class AppBuilder {
     }
 
     static def btw(start, stop) {
-        println "randint($start, $stop)"
         return "randint($start, $stop)"
     }
 
     static def choice(array) {
-        println "choice($array)"
         return "choice($array)"
     }
 
@@ -67,6 +65,12 @@ class AppBuilder {
     def disp(VariableBuilder... variables) {
         print("Disp with : "+variables.collect{it.getName()})
         CodeBuilder builder = new PrinterBuilder(variables.collect{it.getName()})
+        lines.add(builder)
+        return builder
+    }
+
+    def validate(def kwargs, VariableBuilder algo, VariableBuilder X_train, VariableBuilder Y_train) {
+        CodeBuilder builder = new ValidationBuilder(algo, X_train, Y_train, kwargs)
         lines.add(builder)
         return builder
     }
