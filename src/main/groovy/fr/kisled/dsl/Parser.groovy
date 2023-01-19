@@ -25,6 +25,7 @@ class Parser {
             script.run()
         } catch (e) {
             println "Exception while parsing " + e.message
+            e.printStackTrace(System.out)
         }
 
         println()
