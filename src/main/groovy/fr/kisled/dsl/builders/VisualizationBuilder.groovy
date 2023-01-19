@@ -1,23 +1,18 @@
 package fr.kisled.dsl.builders
 
 import fr.kisled.kernel.CodeLine
+
 import fr.kisled.kernel.visualization.Visualization
 
 class VisualizationBuilder extends CodeBuilder {
-    String[] names
-    Float[] results
-    String xLabel
-    String yLabel
+    Visualization visualization
 
-    VisualizationBuilder(List<String> names, List<Number> results, String xLabel, String yLabel) {
-        this.names = names.toArray(new String[0])
-        this.results = results
-        this.xLabel = xLabel
-        this.yLabel = yLabel
+    VisualizationBuilder(String title, String xLabel, String yLabel) {
+        this.visualization = new Visualization(title, xLabel, yLabel)
     }
 
     @Override
     CodeLine build() {
-        return new Visualization(names, results, xLabel, yLabel)
+        return visualization
     }
 }

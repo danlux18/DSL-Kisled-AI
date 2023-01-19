@@ -22,8 +22,8 @@ class AppBuilder {
         return lineBuilder
     }
 
-    def chart(VariableBuilder variable) {
-        CodeBuilder builder = new VisualizationBuilder([variable.getName(),"var_2","var_3","var_4"],"xLabel","yLabel")
+    def chart(String title, String xLabel, String yLabel) {
+        CodeBuilder builder = new VisualizationBuilder(title, xLabel, yLabel)
         lines.add(builder)
         return builder
     }
@@ -63,7 +63,6 @@ class AppBuilder {
     }
 
     def disp(VariableBuilder... variables) {
-        print("Disp with : "+variables.collect{it.getName()})
         CodeBuilder builder = new PrinterBuilder(variables.collect{it.getName()})
         lines.add(builder)
         return builder
@@ -87,6 +86,12 @@ class AppBuilder {
         app.setResults(
                 app.getCodeLines()
                         .collect {it instanceof Validation ? it.varname : null}
+                        .findAll { it != null }
+        )
+
+        app.setResultsNames(
+                app.getCodeLines()
+                        .collect {it instanceof Validation ? it.algo : null}
                         .findAll { it != null }
         )
 

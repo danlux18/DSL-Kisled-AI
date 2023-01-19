@@ -1,4 +1,4 @@
-package fr.kisled.dsl.generator
+package fr.kisled.dsl.generator.visualization
 
 import fr.kisled.dsl.generator.algorithm.GeneratorStrategy
 import fr.kisled.kernel.CodeLine
