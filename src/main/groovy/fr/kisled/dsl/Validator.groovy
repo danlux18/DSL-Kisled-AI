@@ -3,13 +3,15 @@ package fr.kisled.dsl
 import fr.kisled.kernel.App
 import fr.kisled.kernel.CodeLine
 import fr.kisled.kernel.DataAcquisition
+import fr.kisled.kernel.Validation
+import fr.kisled.kernel.algorithm.Algorithm
+import fr.kisled.kernel.ops.Op
 
 import java.util.function.Function
 
 class Validator {
     private List<Function<List<CodeLine>, Boolean>> rules = [
             Validator::appStartsWithAcquisition,
-            Validator::validationAfterAlgorithm,
             Validator::variableUsedAfterBeingDefined
     ]
 
@@ -41,10 +43,11 @@ class Validator {
         return pass
     }
 
-    /**
-     * Validation can use an algorithm that was not defined
-     */
-    private static boolean validationAfterAlgorithm(List<CodeLine> lines) {
+    private static boolean checkIfVariableExist(List<String> variables, String variable, int lineno) {
+        if (!variables.contains(variable)) {
+            System.err.printf("Variable \"%s\" undefined (line %d)\n", variable, lineno)
+            return false
+        }
         return true
     }
 
@@ -52,6 +55,29 @@ class Validator {
      * Variable defined before being used
      */
     private static boolean variableUsedAfterBeingDefined(List<CodeLine> lines) {
-        return true
+        List<String> variables = []
+        boolean pass = true;
+        int lineno = 1
+        for (CodeLine line : lines) {
+            if (line instanceof DataAcquisition) {
+                variables.add(line.varname)
+            }
+            else if (line instanceof Op) {
+                pass &= checkIfVariableExist(variables, line.input_varname, lineno)
+                variables.add(line.output_varname)
+            }
+            else if (line instanceof Algorithm) {
+                variables.add(line.output_varname)
+            }
+            else if (line instanceof Validation) {
+                pass &= checkIfVariableExist(variables, line.algo, lineno)
+                pass &= checkIfVariableExist(variables, line.x, lineno)
+                pass &= checkIfVariableExist(variables, line.y, lineno)
+                variables.add(line.varname)
+            }
+            lineno++
+        }
+
+        return pass
     }
 }
