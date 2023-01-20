@@ -6,6 +6,9 @@ import fr.kisled.kernel.DataAcquisition
 import fr.kisled.kernel.Validation
 import fr.kisled.kernel.algorithm.Algorithm
 import fr.kisled.kernel.ops.Op
+import fr.kisled.kernel.ops.SelectOp
+import fr.kisled.kernel.utils.Range
+import fr.kisled.kernel.visualization.Printer
 
 import java.util.function.Function
 
@@ -43,37 +46,82 @@ class Validator {
         return pass
     }
 
-    private static boolean checkIfVariableExist(List<String> variables, String variable, int lineno) {
-        if (!variables.contains(variable)) {
+    private static boolean checkIfVariableExist(Map<String, String> variables, String variable, String expectedType, int lineno) {
+        if (!variables.containsKey(variable)) {
             System.err.printf("Variable \"%s\" undefined (line %d)\n", variable, lineno)
             return false
         }
+
+        if (expectedType != null && expectedType != variables.get(variable)) {
+            System.err.printf(
+                    "Variable \"%s\" is of type %s but type %s was expected (line %d)\n",
+                    variable,
+                    variables.get(variable),
+                    expectedType,
+                    lineno)
+            return false
+        }
+
         return true
+    }
+
+    private static boolean checkRange(Range range) {
+        if (range.start == null || range.stop == null || range.start < range.stop)
+            return true
+        System.err.printf(
+                "Range (start = %d, stop = %d, step = %d) badly formatted\n",
+                range.start,
+                range.stop,
+                range.step
+        )
+        return false
+    }
+
+    private static boolean checkSelectionCriteria(SelectOp op) {
+        boolean pass = true
+
+        if (op.range instanceof Range)
+            pass &= checkRange(op.range as Range)
+        else if (op.range instanceof List)
+            for (Object criteria : op.range)
+                if (criteria instanceof Range)
+                    pass &= checkRange(criteria)
+
+        return pass
     }
 
     /**
      * Variable defined before being used
      */
     private static boolean variableUsedAfterBeingDefined(List<CodeLine> lines) {
-        List<String> variables = []
+        Map<String, String> variables = [:]
         boolean pass = true
         int lineno = 1
         for (CodeLine line : lines) {
             if (line instanceof DataAcquisition) {
-                variables.add(line.varname)
+                variables.put(line.varname, "Dataframe")
             }
             else if (line instanceof Op) {
-                pass &= checkIfVariableExist(variables, line.input_varname, lineno)
-                variables.add(line.output_varname)
+                pass &= checkIfVariableExist(variables, line.input_varname, "Dataframe", lineno)
+
+                if (line instanceof SelectOp)
+                    pass &= checkSelectionCriteria(line)
+
+                variables.put(line.output_varname, "Dataframe")
             }
             else if (line instanceof Algorithm) {
-                variables.add(line.output_varname)
+                variables.put(line.output_varname, "Algorithm")
             }
             else if (line instanceof Validation) {
-                pass &= checkIfVariableExist(variables, line.algo, lineno)
-                pass &= checkIfVariableExist(variables, line.x, lineno)
-                pass &= checkIfVariableExist(variables, line.y, lineno)
-                variables.add(line.varname)
+                pass &= checkIfVariableExist(variables, line.algo, "Algorithm", lineno)
+                pass &= checkIfVariableExist(variables, line.x, "Dataframe", lineno)
+                pass &= checkIfVariableExist(variables, line.y, "Dataframe", lineno)
+                variables.put(line.varname, "Result")
+            }
+            else if (line instanceof Printer) {
+                for (String varname : line.varnames) {
+                    pass &= checkIfVariableExist(variables, varname, null, lineno)
+                }
             }
             lineno++
         }

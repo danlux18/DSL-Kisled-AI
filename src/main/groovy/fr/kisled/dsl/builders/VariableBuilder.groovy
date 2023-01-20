@@ -10,7 +10,7 @@ import fr.kisled.kernel.ops.SelectOp
 class VariableBuilder extends CodeBuilder {
     String name
     String output_varname
-    String selection = null
+    Object selection = null
     String apply_lambda = null
     String dropped_column = null
     String mapping = null
@@ -28,9 +28,9 @@ class VariableBuilder extends CodeBuilder {
      */
     def getAt(Object o) {
         // Accessing from column index and not a list
-        if (o instanceof Integer) {
-            o = "[$o]"
-        }
+//        if (o instanceof Integer) {
+//            o = "[$o]"
+//        }
 
         this.selection = o
 
@@ -43,10 +43,12 @@ class VariableBuilder extends CodeBuilder {
      * @return The current builder to put it in a variable
      */
     def getProperty(String name) {
-        if (name == ":")
-            this.selection = "[:]"
-        else
-            this.selection = "[\"$name\"]"
+//        if (name == ":")
+//            this.selection = "[:]"
+//        else
+//            this.selection = "[\"$name\"]"
+
+        this.selection = name
 
         return this
     }
