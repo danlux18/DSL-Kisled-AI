@@ -2,7 +2,13 @@ package fr.kisled.dsl.builders
 
 import fr.kisled.kernel.CodeLine
 import fr.kisled.kernel.algorithm.Algorithm
+import fr.kisled.kernel.algorithm.DecisionTreeClassifier
+import fr.kisled.kernel.algorithm.GaussianNB
+import fr.kisled.kernel.algorithm.GradientBoostingClassifier
 import fr.kisled.kernel.algorithm.KNN
+import fr.kisled.kernel.algorithm.LinearSVC
+import fr.kisled.kernel.algorithm.LogisticRegression
+import fr.kisled.kernel.algorithm.MLPClassifier
 import fr.kisled.kernel.algorithm.RandomForest
 
 class AlgorithmBuilder extends CodeBuilder {
@@ -19,6 +25,36 @@ class AlgorithmBuilder extends CodeBuilder {
                 n_estimators: n_estimators,
                 max_depth: max_depth
         )
+        return this
+    }
+
+    def LogisticRegression(max_iter) {
+        algorithm = new LogisticRegression(max_iter: max_iter)
+        return this
+    }
+
+    def GaussianNB() {
+        algorithm = new GaussianNB()
+        return this
+    }
+
+    def DecisionTreeClassifier() {
+        algorithm = new DecisionTreeClassifier()
+        return this
+    }
+
+    def GradientBoostingClassifier(n_estimators) {
+        algorithm = new GradientBoostingClassifier(n_estimators: n_estimators)
+        return this
+    }
+
+    def LinearSVC(C) {
+        algorithm = new LinearSVC(C: C)
+        return this
+    }
+
+    def MLPClassifier(max_iter) {
+        algorithm = new MLPClassifier(max_iter: max_iter)
         return this
     }
 

@@ -42,6 +42,8 @@ class AppBuilder {
         return "choice($array)"
     }
 
+    // === Algorithms ===
+
     def KNN(def hparams) {
         CodeBuilder builder = new AlgorithmBuilder()
         lines.add(builder)
@@ -56,6 +58,50 @@ class AppBuilder {
                 hparams['max_depth']
         )
     }
+
+    def LogisticRegression(def hparams) {
+        CodeBuilder builder = new AlgorithmBuilder()
+        lines.add(builder)
+        return builder.LogisticRegression(hparams['max_iter'])
+    }
+
+    def GaussianNB() {
+        CodeBuilder builder = new AlgorithmBuilder()
+        lines.add(builder)
+        return builder.GaussianNB()
+    }
+
+    def DecisionTreeClassifier() {
+        CodeBuilder builder = new AlgorithmBuilder()
+        lines.add(builder)
+        return builder.DecisionTreeClassifier()
+    }
+
+    def GradientBoostingClassifier(def hparams) {
+        CodeBuilder builder = new AlgorithmBuilder()
+        lines.add(builder)
+        return builder.GradientBoostingClassifier(hparams['n_estimators'])
+    }
+
+    def LinearSVC(def hparams) {
+        CodeBuilder builder = new AlgorithmBuilder()
+        lines.add(builder)
+        return builder.LinearSVC(hparams['C'])
+    }
+
+    def MLPClassifier(def hparams) {
+        CodeBuilder builder = new AlgorithmBuilder()
+        lines.add(builder)
+        return builder.MLPClassifier(hparams['max_iter'])
+    }
+
+    def VotingClassifier(def hparams) {
+        CodeBuilder builder = new AlgorithmBuilder()
+        lines.add(builder)
+        return builder.VotingClassifier(hparams['estimators'], hparams['voting'])
+    }
+
+    // === Utils ===
 
     def methodMissing(String name, def args) {
         println "Unknown method $name called"
