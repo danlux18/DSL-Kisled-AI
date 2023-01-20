@@ -66,8 +66,15 @@ class Validator {
     }
 
     private static boolean checkRange(Range range) {
-        if (range.start == null || range.stop == null || range.start < range.stop)
+        if (range.start == null || range.stop == null)
             return true
+
+        if (range.step > 0 && range.start <= range.stop)
+            return true
+
+        if (range.step < 0 && range.start >= range.stop)
+            return true
+
         System.err.printf(
                 "Range (start = %d, stop = %d, step = %d) badly formatted\n",
                 range.start,
