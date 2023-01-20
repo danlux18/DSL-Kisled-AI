@@ -35,14 +35,12 @@ class AppBuilder {
      */
     static def r(Integer start=null, Integer stop=null, step=1) {
         return new Range(start: start, stop: stop, step: step)
-//        if (start == stop) {
-//            return ":"
-//        }
-//        return step == 1 ? "$start:$stop" : "range($start, $stop, $step)"
     }
 
     static def btw(start, stop) {
-        return "randint($start, $stop)"
+        if (start instanceof Integer && stop instanceof Integer)
+            return "randint($start, $stop)"
+        return "random($start, $stop)"
     }
 
     static def choice(array) {
