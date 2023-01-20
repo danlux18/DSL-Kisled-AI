@@ -26,6 +26,7 @@ public class PyGenerator extends fr.kisled.dsl.generator.Generator {
     private void generateImports(PrintStream output) {
         output.println("""
                 from random import *
+                from math import *
                 
                 # Data Analysis
                 import pandas as pd

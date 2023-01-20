@@ -53,6 +53,7 @@ class JupyterGenerator extends Generator {
     private static def generateImportCell() {
         def sources = [
                 "from random import *\n",
+                "from math import *\n",
                 "\n",
                 "# Data Analysis\n",
                 "import pandas as pd\n",

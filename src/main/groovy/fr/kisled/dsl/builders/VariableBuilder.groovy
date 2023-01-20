@@ -122,6 +122,23 @@ class VariableBuilder extends CodeBuilder {
         return this
     }
 
+    def apply(Closure cl) {
+        String declaration = cl.metaClass.classNode.getDeclaredMethods("doCall")[0].text
+        String definition = cl.metaClass.classNode.getDeclaredMethods("doCall")[0].code.text
+
+        declaration = declaration.replace("java.lang.Object ", "")
+                .replace("public doCall(", "")
+                .replace(") { ... }", "")
+
+        definition = definition.replace("{ return ", "")
+                .replace("this.", "")
+                .replace(" }", "")
+
+        this.apply_lambda = "lambda $declaration: $definition"
+
+        return this
+    }
+
     @Override
     CodeLine build() {
         if (output_varname == null) return new NoOp() // The operation is not properly formatted
