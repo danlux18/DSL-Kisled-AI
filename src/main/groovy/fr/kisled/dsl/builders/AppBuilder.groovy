@@ -49,6 +49,20 @@ class AppBuilder {
         return "choice($array)"
     }
 
+    def disp(VariableBuilder... variables) {
+        CodeBuilder builder = new PrinterBuilder(variables.collect{it.getName()})
+        lines.add(builder)
+        return builder
+    }
+
+    def validate(def kwargs, VariableBuilder algo, VariableBuilder X_train, VariableBuilder Y_train) {
+        CodeBuilder builder = new ValidationBuilder(algo, X_train, Y_train, kwargs)
+        lines.add(builder)
+        return builder
+    }
+
+    // === Algorithms ===
+
     def KNN(def hparams) {
         CodeBuilder builder = new AlgorithmBuilder()
         lines.add(builder)
@@ -64,17 +78,49 @@ class AppBuilder {
         )
     }
 
-    def disp(VariableBuilder... variables) {
-        CodeBuilder builder = new PrinterBuilder(variables.collect{it.getName()})
+    def LogisticRegression(def hparams) {
+        CodeBuilder builder = new AlgorithmBuilder()
         lines.add(builder)
-        return builder
+        return builder.LogisticRegression(hparams['max_iter'])
     }
 
-    def validate(def kwargs, VariableBuilder algo, VariableBuilder X_train, VariableBuilder Y_train) {
-        CodeBuilder builder = new ValidationBuilder(algo, X_train, Y_train, kwargs)
+    def GaussianNB() {
+        CodeBuilder builder = new AlgorithmBuilder()
         lines.add(builder)
-        return builder
+        return builder.GaussianNB()
     }
+
+    def DecisionTreeClassifier() {
+        CodeBuilder builder = new AlgorithmBuilder()
+        lines.add(builder)
+        return builder.DecisionTreeClassifier()
+    }
+
+    def GradientBoostingClassifier(def hparams) {
+        CodeBuilder builder = new AlgorithmBuilder()
+        lines.add(builder)
+        return builder.GradientBoostingClassifier(hparams['n_estimators'])
+    }
+
+    def LinearSVC(def hparams) {
+        CodeBuilder builder = new AlgorithmBuilder()
+        lines.add(builder)
+        return builder.LinearSVC(hparams['C'])
+    }
+
+    def MLPClassifier(def hparams) {
+        CodeBuilder builder = new AlgorithmBuilder()
+        lines.add(builder)
+        return builder.MLPClassifier(hparams['max_iter'])
+    }
+
+    def VotingClassifier(def hparams) {
+        CodeBuilder builder = new AlgorithmBuilder()
+        lines.add(builder)
+        return builder.VotingClassifier(hparams['estimators'], hparams['voting'])
+    }
+
+    // === Utils ===
 
     def methodMissing(String name, def args) {
         println "Unknown method $name called"
