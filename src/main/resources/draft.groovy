@@ -6,6 +6,9 @@ train + 1 >> Y_train
 Y_train - "column1" >> Y_train
 X_train >> ['female': 1, 'male': 0] >> X_test
 
+test.apply { x -> x ** 2 + x / 2 } >> var1
+train.apply { x, y -> sqrt(x ** 2 + y ** 2) } >> var2
+
 KNN(n_neighbors: btw(1, 11), algorithm: ['auto']) >> knn_algo
 validate(knn_algo, X_train, Y_train, cv: 5, scoring: ['acc': 'accuracy']) >> result_knn
 
