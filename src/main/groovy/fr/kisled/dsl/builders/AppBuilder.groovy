@@ -2,6 +2,8 @@ package fr.kisled.dsl.builders
 
 import fr.kisled.dsl.builders.utils.NoOp
 import fr.kisled.kernel.App
+import fr.kisled.kernel.Validation
+import fr.kisled.kernel.utils.Range
 
 class AppBuilder {
     List<CodeBuilder> lines = [] // lines of code in the order wanted by the user
@@ -21,25 +23,42 @@ class AppBuilder {
         return lineBuilder
     }
 
+    def chart(String title, String xLabel, String yLabel) {
+        CodeBuilder builder = new VisualizationBuilder(title, xLabel, yLabel)
+        lines.add(builder)
+        return builder
+    }
+
     /**
      * Build a range where start, stop and step are optional.
      * If the start is equals to stop, then the range describe all value in a set
      */
-    static def r(start=0, stop=0, step=1) {
-        if (start == stop) {
-            return ":"
-        }
-        return step == 1 ? "$start:$stop" : "range($start, $stop, $step)"
+    static def r(Integer start=null, Integer stop=null, step=1) {
+        return new Range(start: start, stop: stop, step: step)
+//        if (start == stop) {
+//            return ":"
+//        }
+//        return step == 1 ? "$start:$stop" : "range($start, $stop, $step)"
     }
 
     static def btw(start, stop) {
-        println "randint($start, $stop)"
         return "randint($start, $stop)"
     }
 
     static def choice(array) {
-        println "choice($array)"
         return "choice($array)"
+    }
+
+    def disp(VariableBuilder... variables) {
+        CodeBuilder builder = new PrinterBuilder(variables.collect{it.getName()})
+        lines.add(builder)
+        return builder
+    }
+
+    def validate(def kwargs, VariableBuilder algo, VariableBuilder X_train, VariableBuilder Y_train) {
+        CodeBuilder builder = new ValidationBuilder(algo, X_train, Y_train, kwargs)
+        lines.add(builder)
+        return builder
     }
 
     // === Algorithms ===
@@ -111,6 +130,18 @@ class AppBuilder {
         App app = new App(name)
 
         app.getCodeLines().addAll(lines.collect {it.build()}.findAll {!(it instanceof NoOp)})
+
+        app.setResults(
+                app.getCodeLines()
+                        .collect {it instanceof Validation ? it.varname : null}
+                        .findAll { it != null }
+        )
+
+        app.setResultsNames(
+                app.getCodeLines()
+                        .collect {it instanceof Validation ? it.algo : null}
+                        .findAll { it != null }
+        )
 
         return app
     }
