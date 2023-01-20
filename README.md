@@ -10,39 +10,80 @@ DSL for Data Mining
 ## Domain Model
 
 ## Backus-Naur Form
-Version 1
 ```bnf
-app ::= stmts final_result ;
+app ::= read_stmt stmts char_stmt ;
 
-stmts ::= stmt stmts | stmt ;
+stmts ::= stmt stmts | /* No statements */ ;
 
-stmt ::= var_stmt | result_stmt ;
+stmt ::= read_stmt | op_stmt | algo_stmt | validation_stmt | disp_stmt ;
 
-var_stmt ::= NAME '=' init_stmt ;
+read_stmt ::= "read" "(" PATH ")" ">>" var ;
 
-init_stmt ::= INT | '"' STRING '"' | array | function ;
+op_stmt ::= (select_op | apply_op | mapping_op) ">>" var ;
 
-array ::= '[' array_elems ']' | '[' dict_elems ']' | '[' ']' ;
+select_op ::= var "[" selectors "]" ;
+selectors ::= selector "," selectors | selector ;
+selector ::= INT | STRING | slice ;
+slice ::= "r" "(" (INT "," INT "," INT | INT "," INT | INT | /* All elements slice */) ")" ;
 
-array_elems ::= init_stmt ',' array_elems | init_stmt ;
+apply_op ::= var ("+" value | "-" value | "-" STRING | "*" value | "/" value | "**" value | ".apply" "{" lambda "}") ;
 
-dict_elems ::= '"' STRING '"' ':' init_stmt ',' dict_elems |  '"' STRING '"' ':' init_stmt ;
+mapping_op ::= var ">>" dict ;
 
-function ::= NAME '(' params ')' | NAME params | NAME '(' ')' ;
+algo_stmt ::=   ( "KNN" "(" "n_neighbors" ":" (value | random) "," "algorithm" ":" (STRING | choice | list) ")" 
+                | "RandomForest" "(" "n_estimators" ":" (value | random) "," "max_depth" ":" (value | random) ")"
+                | "LogisticRegression" "(" "max_iter" ":" (value | random) ")"
+                | "GaussianNB" "(" ")"
+                | "DecisionTreeClassifier" "(" ")"
+                | "GradientBoostingClassifier" "(" "n_estimators" ":" (value | random) ")"
+                | "LinearSVC" "(" "C" ":" (value | random) ")"
+                | "MLPClassifier" "(" "max_iter" ":" (value | random) ")"
+                ) ">>" var
+                ;
 
-params ::= param ',' params | param ;
+random ::= "btw" "(" value "," value ")" ;
+choice ::= "choice" "(" list ")" ;
 
-param ::= NAME ':' init_stmt | init_stmt ;
+validation_stmt ::= "validate" "(" var "," var "," var ")" ">>" var
 
-result_stmt ::= disp | chart ;
+disp_stmt ::= "disp" names | "disp" "(" names ")"
 
-disp ::= 'disp' params | 'disp' '(' params ')' ;
+char_stmt ::= "chart" "(" STRING "," STRING "," STRING ")" | "chart" STRING "," STRING "," STRING ;
 
-chart ::= 'chart' TYPE "," values | 'chart' '(' TYPE ',' values ')' ;
+lambda ::= names "->" expr
+names ::= NAME ", " names | NAME
+expr ::=      value 
+            | BOOLEAN 
+            | STRING
+            | "++" var
+            | var "++"
+            | "--" var
+            | var "--"
+            | var
+            | call
+            | "-" var
+            | "+" var
+            | expr "+" expr
+            | expr "-" expr
+            | expr "*" expr
+            | expr "/" expr
+            | expr "%" expr
+            | expr "<" expr
+            | expr ">" expr
+            | expr "==" expr
+            | expr "!=" expr
+            | expr "<=" expr
+            | expr ">=" expr
+            | expr "**" expr
+            ;
 
-values ::= value ',' values | value ;
+var ::= NAME
+call ::= var "(" eparam_list  ")"
+eparam_list ::= expr ("," eparam_list | /* End of list */) | /* No parameters */
 
-value ::= NAME | init_stmt ;
-
-final_result ::= /* Left by default */ ;
+value ::= INT | FLOAT ;
+list ::= "[" (list_elems | /* Empty list */) "]" ;
+list_elems ::= (value | STRING) "," (list_elems | /* End of list */) ;
+dict ::= "[" (dict_elems | ":") "]" ;
+dict_elems ::= "'" NAME "'" ":" (value | STRING | dict | list) ("," dict_elems | /* End of dict */ ) ;
 ```
