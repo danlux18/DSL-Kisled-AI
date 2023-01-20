@@ -114,12 +114,6 @@ class AppBuilder {
         return builder.MLPClassifier(hparams['max_iter'])
     }
 
-    def VotingClassifier(def hparams) {
-        CodeBuilder builder = new AlgorithmBuilder()
-        lines.add(builder)
-        return builder.VotingClassifier(hparams['estimators'], hparams['voting'])
-    }
-
     // === Utils ===
 
     def methodMissing(String name, def args) {

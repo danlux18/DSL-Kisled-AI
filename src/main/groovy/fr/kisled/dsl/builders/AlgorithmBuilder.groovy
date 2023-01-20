@@ -5,23 +5,23 @@ import fr.kisled.kernel.algorithm.Algorithm
 import fr.kisled.kernel.algorithm.DecisionTreeClassifier
 import fr.kisled.kernel.algorithm.GaussianNB
 import fr.kisled.kernel.algorithm.GradientBoostingClassifier
-import fr.kisled.kernel.algorithm.KNN
+import fr.kisled.kernel.algorithm.KNeighborsClassifier
 import fr.kisled.kernel.algorithm.LinearSVC
 import fr.kisled.kernel.algorithm.LogisticRegression
 import fr.kisled.kernel.algorithm.MLPClassifier
-import fr.kisled.kernel.algorithm.RandomForest
+import fr.kisled.kernel.algorithm.RandomForestClassifier
 
 class AlgorithmBuilder extends CodeBuilder {
     Algorithm algorithm
     String varname
 
     def KNN(n_neighbors, algorithm) {
-        this.algorithm = new KNN(n_neighbors: n_neighbors, algorithm: algorithm)
+        this.algorithm = new KNeighborsClassifier(n_neighbors: n_neighbors, algorithm: algorithm)
         return this
     }
 
     def RandomForest(n_estimators, max_depth) {
-        algorithm = new RandomForest(
+        algorithm = new RandomForestClassifier(
                 n_estimators: n_estimators,
                 max_depth: max_depth
         )
