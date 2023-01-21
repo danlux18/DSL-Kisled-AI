@@ -20,27 +20,29 @@ class PyGenerator extends fr.kisled.dsl.generator.Generator {
             generateCodeLine(line, output)
         }
 
-        generateChart(app.getVisualization(), app.getResults(),app.getResultsNames(),output)
+        generateChart(app.getVisualization(), app.getResults(), app.getResultsNames(), output)
     }
 
     private static void generateImports(PrintStream output) {
-        output.println("""
-                from random import *
-                from math import *
-                
-                # Data Analysis
-                import pandas as pd
-                import matplotlib.pyplot as plt
-
-                # Machine Learning
-                from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, VotingClassifier, AdaBoostClassifier
-                from sklearn.linear_model import LogisticRegression
-                from sklearn.tree import DecisionTreeClassifier
-                from sklearn.neighbors import KNeighborsClassifier
-                from sklearn.neural_network import MLPClassifier
-                from sklearn.model_selection import cross_val_score
-                from sklearn.naive_bayes import GaussianNB, MultinomialNB
-                from sklearn.svm import LinearSVC""")
+        List imports = [
+                "from random import *",
+                "from math import *",
+                "",
+                "# Data Analysis",
+                "import pandas as pd",
+                "import matplotlib.pyplot as plt",
+                "",
+                "# Machine Learning",
+                "from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, VotingClassifier, AdaBoostClassifier",
+                "from sklearn.linear_model import LogisticRegression",
+                "from sklearn.tree import DecisionTreeClassifier",
+                "from sklearn.neighbors import KNeighborsClassifier",
+                "from sklearn.neural_network import MLPClassifier",
+                "from sklearn.model_selection import cross_val_score",
+                "from sklearn.naive_bayes import GaussianNB, MultinomialNB",
+                "from sklearn.svm import LinearSVC"
+        ]
+        output.println(imports.stream().reduce((a, b) -> a + "\n" + b).orElse(""))
     }
 
     private static void generateCodeLine(CodeLine line, PrintStream output) {
@@ -56,7 +58,7 @@ class PyGenerator extends fr.kisled.dsl.generator.Generator {
         }
     }
 
-    private static void generateChart(Visualization visualization, List<String> results, List<String> resultsNames, PrintStream output){
+    private static void generateChart(Visualization visualization, List<String> results, List<String> resultsNames, PrintStream output) {
         output.println()
         List<String> sources = (new VisualizationGenerator(results: results, names: resultsNames)).toPython(visualization)
         output.println(sources.stream().reduce((a, b) -> a + "\n" + b).orElse(""))

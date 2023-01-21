@@ -25,6 +25,7 @@ java -jar target/KISLED-AI-1.0.jar [OPTIONS] path_to_DSL_script
 ![Domain Model](images/Domain_Model.png)
 
 ## Backus-Naur Form
+
 ```bnf
 app ::= read_stmt stmts char_stmt ;
 
@@ -70,7 +71,11 @@ disp_stmt ::= "disp" disp_names | "disp" "(" disp_names ")"
 disp_names ::= NAME optional_selector ", " disp_names | NAME optional_selector ;
 optional_selector ::= "." NAME "(" ")" | /* No selector */ ;
 
-char_stmt ::= "chart" "(" STRING "," STRING "," STRING ")" | "chart" STRING "," STRING "," STRING ;
+char_stmt ::= "chart" "(" STRING "," STRING "," STRING optional_params ")" | "chart" STRING "," STRING "," STRING optional_params ;
+optional_params ::= "," "'" ("plot" | "bar" | "barh" | "scatter" | "hist") "'" optional_data_select | /* Default type */ ;
+
+optional_data_select ::=    "," "data" ("[" (INT | STRING) "]" | "." NAME "(" ")")
+                            | /* No data selection */ ;
 
 lambda ::= names "->" expr
 names ::= NAME ", " names | NAME

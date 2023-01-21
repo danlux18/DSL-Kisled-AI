@@ -16,8 +16,7 @@ import java.util.function.Function
 class Validator {
     private List<Function<List<CodeLine>, Boolean>> rules = [
             Validator::appStartsWithAcquisition,
-            Validator::variableUsedAfterBeingDefined,
-            Validator::checkChartType
+            Validator::variableUsedAfterBeingDefined
     ]
 
     /**
@@ -31,6 +30,8 @@ class Validator {
         for (Function<List<CodeLine>, Boolean> rule : rules) {
             pass &= rule.apply(app.getCodeLines())
         }
+
+        checkChartType([app.visualization])
 
         return pass
     }

@@ -1,5 +1,6 @@
 package fr.kisled.dsl.builders
 
+import fr.kisled.dsl.builders.transformations.ClosureCustomizer
 import fr.kisled.dsl.builders.utils.NoOp
 import fr.kisled.kernel.App
 import fr.kisled.kernel.Validation
@@ -25,9 +26,8 @@ class AppBuilder {
         return lineBuilder
     }
 
-    def chart(String title, String xLabel, String yLabel, String type = 'barh') {
-        visualization = new VisualizationBuilder(title, xLabel, yLabel, type)
-//        lines.add(builder)
+    def chart(String title, String xLabel, String yLabel, String type = 'plot', VariableBuilder builder = null) {
+        visualization = new VisualizationBuilder(title, xLabel, yLabel, type, builder)
         return visualization
     }
 

@@ -58,4 +58,4 @@ MLPClassifier(max_iter: 300) >> mlp
 validate(mlp, X, y, cv: 8) >> scores_mlp
 disp scores_mlp
 
-chart "Result", "Accuracy", "Models"
+chart "Result", "Accuracy", "Models", "barh", data.mean()
