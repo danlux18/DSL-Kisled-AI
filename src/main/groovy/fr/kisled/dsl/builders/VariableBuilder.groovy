@@ -21,7 +21,6 @@ class VariableBuilder extends CodeBuilder {
 
     /**
      * Select a subpart of the current variable
-     * Fixme: Check if the input variable is a Dataframe or a Set
      *
      * @param o The subset
      * @return The current builder to put it in a variable
