@@ -7,7 +7,22 @@ DSL for Data Mining
 * Thomas Di Grande
 * Dan Nakache
 
+## Usage
+```shell
+# Compilation at root of the project
+mvn package
+
+# Run
+java -jar target/KISLED-AI-1.0.jar [OPTIONS] path_to_DSL_script
+```
+
+| Options |  Arguments  |                   Description                    |      Possible values      |
+|:-------:|:-----------:|:------------------------------------------------:|:-------------------------:|
+|   -o    | output_file | Set the output file (extension must be defined). | absolute or relative path |
+|   -e    |   format    |            Define the output format.             |        py or ipynb        |
+
 ## Domain Model
+![Domain Model](images/Domain_Model.png)
 
 ## Backus-Naur Form
 ```bnf
