@@ -10,7 +10,7 @@ import fr.kisled.kernel.ops.SelectOp
 
 class VariableBuilder extends CodeBuilder {
     String name
-    String output_varname
+    VariableBuilder output
     Object selection = null
     String apply_lambda = null
     String dropped_column = null
@@ -58,7 +58,8 @@ class VariableBuilder extends CodeBuilder {
      * @param varname the variable set by the operation
      */
     def rightShift(VariableBuilder varname) {
-        this.output_varname = varname.getName()
+        this.output = varname
+        return this
     }
 
     /**
@@ -132,13 +133,19 @@ class VariableBuilder extends CodeBuilder {
 
     @Override
     CodeLine build() {
-        if (output_varname == null) return new NoOp() // The operation is not properly formatted
+        if (output == null) return new NoOp() // The operation is not properly formatted
         else if (apply_lambda != null)
-            return new ApplyOp(input_varname: name, output_varname: output_varname, lambda: apply_lambda)
+            return new ApplyOp(input_varname: name, output_varname: output.getName(), lambda: apply_lambda)
         else if (dropped_column != null)
-            return new DropColumnOp(input_varname: name, output_varname: output_varname, dropped_column: dropped_column)
+            return new DropColumnOp(input_varname: name, output_varname: output.getName(), dropped_column: dropped_column)
         else if (mapping != null)
-            return new MappingOp(input_varname: name, output_varname: output_varname, mapping: mapping)
-        return new SelectOp(input_varname: name, output_varname: output_varname, range: selection)
+            return new MappingOp(
+                    input_varname: name,
+                    input_select: selection,
+                    output_varname: output.getName(),
+                    output_select: output.getSelection(),
+                    mapping: mapping
+            )
+        return new SelectOp(input_varname: name, output_varname: output.getName(), range: selection)
     }
 }
