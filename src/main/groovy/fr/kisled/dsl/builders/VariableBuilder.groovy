@@ -1,5 +1,6 @@
 package fr.kisled.dsl.builders
 
+import fr.kisled.dsl.builders.transformations.ClosureCustomizer
 import fr.kisled.dsl.builders.utils.NoOp
 import fr.kisled.kernel.CodeLine
 import fr.kisled.kernel.ops.ApplyOp
@@ -122,18 +123,9 @@ class VariableBuilder extends CodeBuilder {
     }
 
     def apply(Closure cl) {
-        String declaration = cl.metaClass.classNode.getDeclaredMethods("doCall")[0].text
-        String definition = cl.metaClass.classNode.getDeclaredMethods("doCall")[0].code.text
+        String lambda = ClosureCustomizer.LAMBDAS.remove(0)
 
-        declaration = declaration.replace("java.lang.Object ", "")
-                .replace("public doCall(", "")
-                .replace(") { ... }", "")
-
-        definition = definition.replace("{ return ", "")
-                .replace("this.", "")
-                .replace(" }", "")
-
-        this.apply_lambda = "lambda $declaration: $definition"
+        this.apply_lambda = lambda
 
         return this
     }

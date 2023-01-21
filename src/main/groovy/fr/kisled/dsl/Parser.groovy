@@ -1,6 +1,7 @@
 package fr.kisled.dsl
 
 import fr.kisled.dsl.builders.AppBuilder
+import fr.kisled.dsl.builders.transformations.ClosureCustomizer
 import fr.kisled.kernel.App
 import org.codehaus.groovy.control.CompilerConfiguration
 
@@ -12,6 +13,7 @@ class Parser {
     Parser() {
         this.config = new CompilerConfiguration()
         config.scriptBaseClass = 'fr.kisled.dsl.DSLScript'
+        config.addCompilationCustomizers(new ClosureCustomizer())
         this.shell = new GroovyShell(config)
         this.binding = new Binding()
         this.binding.setVariable("builder", new AppBuilder())
