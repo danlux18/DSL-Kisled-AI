@@ -6,9 +6,10 @@ import fr.kisled.kernel.CodeLine
 
 @Generator(generator = PrinterGenerator.class)
 class Printer extends CodeLine{
-    String[] varnames
-
-    Printer(varnames) {
-        this.varnames = varnames
-    }
+    def vars = [:]
+//    String[] varnames
+//
+//    Printer(varnames) {
+//        this.varnames = varnames
+//    }
 }

@@ -17,8 +17,8 @@ class AppBuilder {
         return builder
     }
 
-    def read(String path) {
-        CodeBuilder lineBuilder = new DataAcquisitionBuilder(path)
+    def read(String path, Object index_col = '') {
+        CodeBuilder lineBuilder = new DataAcquisitionBuilder(path, index_col)
         lines.add(lineBuilder)
         return lineBuilder
     }
@@ -48,7 +48,7 @@ class AppBuilder {
     }
 
     def disp(VariableBuilder... variables) {
-        CodeBuilder builder = new PrinterBuilder(variables.collect{it.getName()})
+        CodeBuilder builder = new PrinterBuilder(vars: variables)
         lines.add(builder)
         return builder
     }

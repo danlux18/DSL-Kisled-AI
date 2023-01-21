@@ -9,13 +9,19 @@ class MappingOpGenerator extends GeneratorStrategy {
     List<String> toPython(CodeLine line) {
         if (line instanceof MappingOp)
             return [
-                    line.output_varname +
+                    line.output_varname + varSelect2String(line.output_select) +
                             " = " +
-                            line.input_varname +
+                            line.input_varname + varSelect2String(line.input_select) +
                             ".map(" +
                             line.mapping +
                             ")"
             ]
         throw new IllegalArgumentException()
+    }
+
+    private static String varSelect2String(String select) {
+        if (select == null)
+            return ""
+        return "[\"" + select + "\"]"
     }
 }
