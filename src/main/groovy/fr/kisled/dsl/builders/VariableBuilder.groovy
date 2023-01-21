@@ -27,11 +27,6 @@ class VariableBuilder extends CodeBuilder {
      * @return The current builder to put it in a variable
      */
     def getAt(Object o) {
-        // Accessing from column index and not a list
-//        if (o instanceof Integer) {
-//            o = "[$o]"
-//        }
-
         this.selection = o
 
         return this
@@ -43,13 +38,7 @@ class VariableBuilder extends CodeBuilder {
      * @return The current builder to put it in a variable
      */
     def getProperty(String name) {
-//        if (name == ":")
-//            this.selection = "[:]"
-//        else
-//            this.selection = "[\"$name\"]"
-
         this.selection = name
-
         return this
     }
 
@@ -85,7 +74,6 @@ class VariableBuilder extends CodeBuilder {
      * @return The current builder to put it in a variable
      */
     def plus(val) {
-//        println "Apply op `+ $val`"
         this.apply_lambda = "lambda x: x + $val"
         return this
     }

@@ -2,8 +2,10 @@ package fr.kisled.dsl.generator.jupyter
 
 import fr.kisled.dsl.generator.Generator
 import fr.kisled.dsl.generator.algorithm.GeneratorStrategy
+import fr.kisled.dsl.generator.visualization.VisualizationGenerator
 import fr.kisled.kernel.App
 import fr.kisled.kernel.CodeLine
+import fr.kisled.kernel.visualization.Visualization
 import groovy.json.JsonOutput
 
 class JupyterGenerator extends Generator {
@@ -14,6 +16,8 @@ class JupyterGenerator extends Generator {
         for (CodeLine line : app.codeLines) {
             cells.add(generateCodeLine(line))
         }
+
+        cells.add(generateChart(app.visualization, app.results, app.resultsNames))
 
         def jupyter = [
                 cells: cells,
@@ -87,5 +91,13 @@ class JupyterGenerator extends Generator {
         } catch (Exception e) {
             println("Exception during generation: " + e.getMessage())
         }
+    }
+
+    private static def generateChart(Visualization visualization, List<String> results, List<String> resultsNames){
+        GeneratorStrategy generator = new VisualizationGenerator(results: results, names: resultsNames)
+        List<String> lines = generator.toPython(visualization).collect {"" + it + "\n"}
+        lines.add(lines.removeLast().replace("\n", ""))
+
+        return generateCodeCell(lines)
     }
 }

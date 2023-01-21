@@ -11,7 +11,8 @@ class PrinterGenerator extends GeneratorStrategy {
             return [
                     String.format(
                             "print(%s)",
-                            String.join(", ", toPrint.vars.collect {k, v -> k + "." + v})
+                            toPrint.vars.collect {k, v -> v != null ?k + "." + v : k}
+                                    .stream().reduce((a, b) -> a + ", " + b).orElse("")
                     )
             ]
         throw new IllegalArgumentException()
