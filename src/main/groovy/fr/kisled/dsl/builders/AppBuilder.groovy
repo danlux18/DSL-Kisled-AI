@@ -4,9 +4,11 @@ import fr.kisled.dsl.builders.utils.NoOp
 import fr.kisled.kernel.App
 import fr.kisled.kernel.Validation
 import fr.kisled.kernel.utils.Range
+import fr.kisled.kernel.visualization.Visualization
 
 class AppBuilder {
     List<CodeBuilder> lines = [] // lines of code in the order wanted by the user
+    VisualizationBuilder visualization = null
 
     AppBuilder() {
     }
@@ -23,10 +25,10 @@ class AppBuilder {
         return lineBuilder
     }
 
-    def chart(String title, String xLabel, String yLabel) {
-        CodeBuilder builder = new VisualizationBuilder(title, xLabel, yLabel)
-        lines.add(builder)
-        return builder
+    def chart(String title, String xLabel, String yLabel, String type = 'barh') {
+        visualization = new VisualizationBuilder(title, xLabel, yLabel, type)
+//        lines.add(builder)
+        return visualization
     }
 
     /**
@@ -128,6 +130,8 @@ class AppBuilder {
                         .collect {it instanceof Validation ? it.varname : null}
                         .findAll { it != null }
         )
+
+        app.setVisualization((Visualization) visualization.build())
 
         app.setResultsNames(
                 app.getCodeLines()

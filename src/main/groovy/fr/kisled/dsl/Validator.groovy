@@ -9,13 +9,15 @@ import fr.kisled.kernel.ops.Op
 import fr.kisled.kernel.ops.SelectOp
 import fr.kisled.kernel.utils.Range
 import fr.kisled.kernel.visualization.Printer
+import fr.kisled.kernel.visualization.Visualization
 
 import java.util.function.Function
 
 class Validator {
     private List<Function<List<CodeLine>, Boolean>> rules = [
             Validator::appStartsWithAcquisition,
-            Validator::variableUsedAfterBeingDefined
+            Validator::variableUsedAfterBeingDefined,
+            Validator::checkChartType
     ]
 
     /**
@@ -131,6 +133,23 @@ class Validator {
                 }
             }
             lineno++
+        }
+
+        return pass
+    }
+
+    private static List chartTypes = ['plot', 'bar', 'barh', 'scatter', 'hist']
+    private static boolean checkChartType(List<CodeLine> lines) {
+        String type = ""
+        boolean pass = lines.findAll { it instanceof Visualization }
+                .stream().allMatch(v -> chartTypes.contains(type = v.properties['type']))
+
+        if (!pass) {
+            System.err.printf(
+                    "Chart type should be %s but was %s\n",
+                    chartTypes.stream().reduce((a, b) -> a + ', ' + b).orElse(""),
+                    type
+            )
         }
 
         return pass

@@ -7,8 +7,8 @@ import fr.kisled.kernel.visualization.Visualization
 class VisualizationBuilder extends CodeBuilder {
     Visualization visualization
 
-    VisualizationBuilder(String title, String xLabel, String yLabel) {
-        this.visualization = new Visualization(title, xLabel, yLabel)
+    VisualizationBuilder(String title, String xLabel, String yLabel, String type) {
+        this.visualization = new Visualization(title, xLabel, yLabel, type)
     }
 
     @Override

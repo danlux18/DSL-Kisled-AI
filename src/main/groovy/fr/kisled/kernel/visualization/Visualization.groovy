@@ -9,10 +9,12 @@ class Visualization extends CodeLine {
     String title
     String xLabel
     String yLabel
+    String type
 
-    Visualization(String title, String xLabel, String yLabel) {
+    Visualization(String title, String xLabel, String yLabel, String type) {
         this.title = title
         this.xLabel = xLabel
         this.yLabel = yLabel
+        this.type = type
     }
 }
