@@ -32,9 +32,11 @@ stmts ::= stmt stmts | /* No statements */ ;
 
 stmt ::= read_stmt | op_stmt | algo_stmt | validation_stmt | disp_stmt ;
 
-read_stmt ::= "read" "(" PATH ")" ">>" var ;
+read_stmt ::= "read" "(" PATH optional_index_col ")" ">>" var ;
 
-op_stmt ::= (select_op | apply_op | mapping_op) ">>" var ;
+optional_index_col ::= "," STRING | /* Default index column */ ;
+
+op_stmt ::= (select_op | apply_op) ">>" var | mapping_op ;
 
 select_op ::= var "[" selectors "]" ;
 selectors ::= selector "," selectors | selector ;
@@ -43,7 +45,9 @@ slice ::= "r" "(" (INT "," INT "," INT | INT "," INT | INT | /* All elements sli
 
 apply_op ::= var ("+" value | "-" value | "-" STRING | "*" value | "/" value | "**" value | ".apply" "{" lambda "}") ;
 
-mapping_op ::= var ">>" dict ;
+mapping_op ::= var mapping_selector ">>" dict ">>" var mapping_selector ;
+
+mapping_selector ::= "[" STRING "]" | /* No selector */ ;
 
 algo_stmt ::=   ( "KNN" "(" "n_neighbors" ":" (value | random) "," "algorithm" ":" (STRING | choice | list) ")" 
                 | "RandomForest" "(" "n_estimators" ":" (value | random) "," "max_depth" ":" (value | random) ")"
@@ -61,7 +65,10 @@ choice ::= "choice" "(" list ")" ;
 
 validation_stmt ::= "validate" "(" var "," var "," var ")" ">>" var
 
-disp_stmt ::= "disp" names | "disp" "(" names ")"
+disp_stmt ::= "disp" disp_names | "disp" "(" disp_names ")"
+
+disp_names ::= NAME optional_selector ", " disp_names | NAME optional_selector ;
+optional_selector ::= "." NAME "(" ")" | /* No selector */ ;
 
 char_stmt ::= "chart" "(" STRING "," STRING "," STRING ")" | "chart" STRING "," STRING "," STRING ;
 

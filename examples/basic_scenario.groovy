@@ -13,7 +13,7 @@ train.apply { x -> x.fillna(x.value_counts().index[0]) } >> train
 train['Sex'] >> ['female': 1, 'male': 0] >> train['Sex']
 train['Embarked'] >> ['Q': 0, 'C': 1, 'S': 2] >> train['Embarked']
 
-//disp train.head()
+disp train.head()
 
 train - 'Survived' >> X
 train['Survived'] >> y

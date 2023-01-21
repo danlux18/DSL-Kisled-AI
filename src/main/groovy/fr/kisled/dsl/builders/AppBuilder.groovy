@@ -48,7 +48,7 @@ class AppBuilder {
     }
 
     def disp(VariableBuilder... variables) {
-        CodeBuilder builder = new PrinterBuilder(variables.collect{it.getName()})
+        CodeBuilder builder = new PrinterBuilder(vars: variables)
         lines.add(builder)
         return builder
     }

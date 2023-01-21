@@ -131,6 +131,11 @@ class VariableBuilder extends CodeBuilder {
         return this
     }
 
+    def methodMissing(String name, def args) {
+        this.selection = name + "()"
+        return this
+    }
+
     @Override
     CodeLine build() {
         if (output == null) return new NoOp() // The operation is not properly formatted

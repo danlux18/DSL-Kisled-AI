@@ -126,7 +126,7 @@ class Validator {
                 variables.put(line.varname, "Result")
             }
             else if (line instanceof Printer) {
-                for (String varname : line.varnames) {
+                for (String varname : line.vars.keySet()) {
                     pass &= checkIfVariableExist(variables, varname, null, lineno)
                 }
             }
