@@ -14,7 +14,7 @@ class DropColumnOpGenerator extends GeneratorStrategy {
                             line.input_varname +
                             ".drop(" +
                             line.dropped_column +
-                            ")"
+                            ", axis = 1)"
             ]
         throw new IllegalArgumentException()
     }

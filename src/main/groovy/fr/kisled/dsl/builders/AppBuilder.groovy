@@ -17,8 +17,8 @@ class AppBuilder {
         return builder
     }
 
-    def read(String path) {
-        CodeBuilder lineBuilder = new DataAcquisitionBuilder(path)
+    def read(String path, Object index_col = '') {
+        CodeBuilder lineBuilder = new DataAcquisitionBuilder(path, index_col)
         lines.add(lineBuilder)
         return lineBuilder
     }

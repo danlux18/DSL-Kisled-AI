@@ -5,10 +5,12 @@ import fr.kisled.kernel.DataAcquisition
 
 class DataAcquisitionBuilder extends CodeBuilder {
     String path
+    Object index_col
     String varname
 
-    DataAcquisitionBuilder(String path) {
+    DataAcquisitionBuilder(String path, Object index_col) {
         this.path = path
+        this.index_col = index_col
     }
 
     /**
@@ -21,6 +23,6 @@ class DataAcquisitionBuilder extends CodeBuilder {
 
     @Override
     CodeLine build() {
-        return new DataAcquisition(path, varname)
+        return new DataAcquisition(path, varname, index_col)
     }
 }
