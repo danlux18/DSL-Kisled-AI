@@ -9,6 +9,8 @@ class DataAcquisitionBuilder extends CodeBuilder {
     String varname
 
     DataAcquisitionBuilder(String path, Object index_col) {
+        if (!path.endsWith(".csv"))
+            throw new IllegalArgumentException("\"read\" method only takes CSV files as path parameter")
         this.path = path
         this.index_col = index_col
     }

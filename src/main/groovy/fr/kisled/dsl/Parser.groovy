@@ -26,15 +26,19 @@ class Parser {
         try {
             script.run()
         } catch (e) {
-            println "Exception while parsing " + e.message
-            e.printStackTrace(System.out)
+            System.err.println "Exception while parsing : " + e.message
+//            e.printStackTrace(System.out)
         }
 
         println()
 
         String appname = file.name.replace(".groovy", "")
-
-        App app = ((AppBuilder) this.binding.getVariable("builder")).build(appname)
+        App app;
+        try {
+            app = ((AppBuilder) this.binding.getVariable("builder")).build(appname)
+        } catch (Exception ignored) {
+            throw new AppValidationException()
+        }
 
         Validator validator = new Validator()
 
