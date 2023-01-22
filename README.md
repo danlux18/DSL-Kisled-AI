@@ -22,7 +22,7 @@ java -jar target/KISLED-AI-1.0.jar [OPTIONS] path_to_DSL_script
 |   -e    |   format    |            Define the output format.             |        py or ipynb        |
 
 ## Domain Model
-![Domain Model](images/Domain_Model.png)
+![Domain Model - Version finale](images/Domain_Model.png)
 
 ## Backus-Naur Form
 
