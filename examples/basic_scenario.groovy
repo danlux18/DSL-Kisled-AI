@@ -7,7 +7,6 @@ read("./data/train.csv", 'PassengerId') >> train
 //train.apply { train -> (train.isnull().sum().sort_values(ascending=False) * 100)/train.shape[0] } >> train
 train - ['Cabin', 'Ticket', 'Name'] >> train
 
-// Fixme: implement missing operands
 train.apply { x -> x.fillna(x.value_counts().index[0]) } >> train
 
 train['Sex'] >> ['female': 1, 'male': 0] >> train['Sex']

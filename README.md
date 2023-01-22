@@ -64,9 +64,10 @@ algo_stmt ::=   ( "KNN" "(" "n_neighbors" ":" (value | random) "," "algorithm" "
 random ::= "btw" "(" value "," value ")" ;
 choice ::= "choice" "(" list ")" ;
 
-validation_stmt ::= "validate" "(" var "," var "," var ")" ">>" var
+validation_stmt ::= "validate" "(" var "," var "," var ")" ">>" var 
+                  | "validate" "(" var "," var "," var "," "cv" ":" INT ")" ">>" var ;
 
-disp_stmt ::= "disp" disp_names | "disp" "(" disp_names ")"
+disp_stmt ::= "disp" disp_names | "disp" "(" disp_names ")" ;
 
 disp_names ::= NAME optional_selector ", " disp_names | NAME optional_selector ;
 optional_selector ::= "." NAME "(" ")" | /* No selector */ ;
@@ -77,8 +78,8 @@ optional_params ::= "," "'" ("plot" | "bar" | "barh" | "scatter" | "hist") "'" o
 optional_data_select ::=    "," "data" ("[" (INT | STRING) "]" | "." NAME "(" ")")
                             | /* No data selection */ ;
 
-lambda ::= names "->" expr
-names ::= NAME ", " names | NAME
+lambda ::= names "->" expr ;
+names ::= NAME ", " names | NAME ;
 expr ::=      value 
             | BOOLEAN 
             | STRING
@@ -104,9 +105,9 @@ expr ::=      value
             | expr "**" expr
             ;
 
-var ::= NAME
-call ::= var "(" eparam_list  ")"
-eparam_list ::= expr ("," eparam_list | /* End of list */) | /* No parameters */
+var ::= NAME ;
+call ::= var "(" eparam_list  ")" ;
+eparam_list ::= expr ("," eparam_list | /* End of list */) | /* No parameters */ ;
 
 value ::= INT | FLOAT ;
 list ::= "[" (list_elems | /* Empty list */) "]" ;
