@@ -68,7 +68,7 @@ class ClosureCustomizer extends CompilationCustomizer {
                 .reduce((a, b) -> a + ", " + b).orElse("")
         String code = expr.code.text
                 .replace("{ ", "")
-                .replace("} ", "")
+                .replace(" }", "")
                 .replace("this.", "")
         return "lambda $params: $code"
     }

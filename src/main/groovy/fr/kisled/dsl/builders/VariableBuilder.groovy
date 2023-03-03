@@ -84,10 +84,16 @@ class VariableBuilder extends CodeBuilder {
      * @return The current builder to put it in a variable
      */
     def minus(val) {
+        def final_val = (v) -> {
+            if (v instanceof String)
+                return "\"$v\""
+            return v
+        }
+
         if (val instanceof String)
-            dropped_column = "\"$val\""
+            this.dropped_column = "\"$val\""
         else if (val instanceof ArrayList)
-            dropped_column = "$val"
+            this.dropped_column = "[${String.join(", ", val.collect { v -> "${final_val(v)}"})}]"
         else
             this.apply_lambda = "lambda x: x - $val"
         return this
