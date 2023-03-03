@@ -16,7 +16,7 @@ class AlgorithmBuilder extends CodeBuilder {
     String varname
 
     def KNN(n_neighbors, algorithm) {
-        this.algorithm = new KNeighborsClassifier(n_neighbors: n_neighbors, algorithm: algorithm)
+        this.algorithm = new KNeighborsClassifier(n_neighbors: n_neighbors, algorithm: (algorithm instanceof String ? [algorithm]: algorithm))
         return this
     }
 

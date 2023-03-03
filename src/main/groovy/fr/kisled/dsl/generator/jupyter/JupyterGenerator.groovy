@@ -94,7 +94,7 @@ class JupyterGenerator extends Generator {
     }
 
     private static def generateChart(Visualization visualization, List<String> results, List<String> resultsNames){
-        GeneratorStrategy generator = new VisualizationGenerator(results: results, names: resultsNames)
+        GeneratorStrategy generator = new VisualizationGenerator(results: results, names: resultsNames.collect {it -> "${it}.__class__.__name__"})
         List<String> lines = generator.toPython(visualization).collect {"" + it + "\n"}
         lines.add(lines.removeLast().replace("\n", ""))
 

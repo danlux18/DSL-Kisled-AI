@@ -53,6 +53,10 @@ class AlgorithmGenerator extends GeneratorStrategy {
                     "]"
         }
         else if (value instanceof Object[]) {
+            if (value.length == 1) {
+                return value2string(value[0])
+            }
+
             return "[" +
                     String.join(", ", value.collect {value2string(it)}) + "]"
         }

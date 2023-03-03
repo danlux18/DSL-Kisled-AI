@@ -28,7 +28,7 @@ validate(nb, X, y, cv: 8) >> scores_nb
 disp scores_nb
 
 // KNN
-KNN(n_neighbors: 5, algorithm: 'auto') >> knn
+KNN(n_neighbors: 5, algorithm: "auto") >> knn
 validate(knn, X, y, cv: 8) >> scores_knn
 disp scores_knn
 
